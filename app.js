@@ -249,7 +249,7 @@ function updateCategorieSelect() {
 
 // Affiche la modale de choix (Ajouter/Modifier)
 function showCategorieChoiceModal() {
-  showModal("categorieChoiceModal");
+onclick="if (checkAdminAccess()) showCategorieChoiceModal()"
 }
 
 // Affiche la modale d'ajout ou de modification
