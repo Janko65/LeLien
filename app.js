@@ -127,7 +127,7 @@ function saveProblematique() {
   const dateDeb = document.getElementById("problematiqueDateDeb").value;
   const métier = editingId
     ? problematiques.find(p => p.id === editingId).métier
-    : (currentUser.role === "admin" ? document.getElementById("problematiqueMetier").value : currentUser.métier);
+    : currentUser.métier;
 
   if (!titre || !description) {
     alert("Titre et description requis !");
