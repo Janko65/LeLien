@@ -16,15 +16,13 @@ const metiers = {
   admin: { label: "Admin", color: "var(--admin-color)" }
 };
 
-// Catégories dynamiques (chargées depuis localStorage ou valeurs par défaut)
+// Catégories dynamiques
 let categories = JSON.parse(localStorage.getItem("categories")) || {
   catégorie1: { label: "Planning", icon: "", color: "#FF9800" },
   catégorie2: { label: "Entretien", icon: "", color: "#00BCD4" },
 };
 
 let editingCategorieId = null;
-
-// État
 let currentUser = null;
 let problematiques = JSON.parse(localStorage.getItem("problematiques")) || [];
 let currentTheme = localStorage.getItem("theme") || "dark";
@@ -49,8 +47,8 @@ function updateUI() {
   document.getElementById("userName").textContent = currentUser.nom;
   const userProblematiques = getUserProblematiques();
   document.getElementById("userStatus").textContent =
-  `${userProblematiques.length} événement${userProblematiques.length > 1 ? "s" : ""}`;
-  renderProblematiques(); // Re-rendu pour afficher les nouvelles catégories
+    `${userProblematiques.length} événement${userProblematiques.length > 1 ? "s" : ""}`;
+  renderProblematiques();
 }
 
 // ======================
@@ -93,8 +91,7 @@ function showProblematiqueModal() {
   document.getElementById("saveProblematiqueBtn").style.display = "block";
   document.getElementById("deleteProblematiqueBtn").style.display = "none";
 
-  updateCategorieSelect(); // <-- Ajoute cette ligne
-
+  updateCategorieSelect();
   showModal("problematiqueModal");
 }
 
@@ -113,7 +110,7 @@ function openProblematique(id) {
 
   const canEdit = currentUser.role === "admin" || p.métier === currentUser.métier;
 
-  ["problematiqueTitre","problematiqueDescription","problematiqueCategorie","problematiqueDiffusion","problematiqueDateDeb"]
+  ["problematiqueTitre", "problematiqueDescription", "problematiqueCategorie", "problematiqueDiffusion", "problematiqueDateDeb"]
     .forEach(id => document.getElementById(id).disabled = !canEdit);
 
   document.getElementById("saveProblematiqueBtn").style.display = canEdit ? "block" : "none";
@@ -123,33 +120,38 @@ function openProblematique(id) {
 }
 
 function saveProblematique() {
- const titre = document.getElementById("problematiqueTitre").value.trim();
- const description = document.getElementById("problematiqueDescription").value.trim();
- const categorie = document.getElementById("problematiqueCategorie").value;
- const diffusion = document.getElementById("problematiqueDiffusion").value;
- const dateDeb = document.getElementById("problematiqueDateDeb").value;
- const métier = editingId
-   ? problematiques.find(p => p.id === editingId).métier
-   : (currentUser.role === "admin" ? document.getElementById("problematiqueMetier").value : currentUser.métier);
- if (!titre || !description) {
-   alert("Titre et description requis !");
-   return;
- }
- if (!categorie) {
-   alert("Veuillez sélectionner une catégorie !");
-   return;
- }
- const problematique = {
-   id: editingId || Date.now().toString(),
-   titre, description, categorie, diffusion,
-   dateDeb: new Date(dateDeb).toISOString(),
-   métier, nomUtilisateur: currentUser.nom
- };
- if (editingId) problematiques = problematiques.map(p => p.id === editingId ? problematique : p);
- else problematiques.push(problematique);
- localStorage.setItem("problematiques", JSON.stringify(problematiques));
- hideModal("problematiqueModal");
- updateUI();
+  const titre = document.getElementById("problematiqueTitre").value.trim();
+  const description = document.getElementById("problematiqueDescription").value.trim();
+  const categorie = document.getElementById("problematiqueCategorie").value;
+  const diffusion = document.getElementById("problematiqueDiffusion").value;
+  const dateDeb = document.getElementById("problematiqueDateDeb").value;
+  const métier = editingId
+    ? problematiques.find(p => p.id === editingId).métier
+    : (currentUser.role === "admin" ? document.getElementById("problematiqueMetier").value : currentUser.métier);
+
+  if (!titre || !description) {
+    alert("Titre et description requis !");
+    return;
+  }
+
+  if (!categorie) {
+    alert("Veuillez sélectionner une catégorie !");
+    return;
+  }
+
+  const problematique = {
+    id: editingId || Date.now().toString(),
+    titre, description, categorie, diffusion,
+    dateDeb: new Date(dateDeb).toISOString(),
+    métier, nomUtilisateur: currentUser.nom
+  };
+
+  if (editingId) problematiques = problematiques.map(p => p.id === editingId ? problematique : p);
+  else problematiques.push(problematique);
+
+  localStorage.setItem("problematiques", JSON.stringify(problematiques));
+  hideModal("problematiqueModal");
+  updateUI();
 }
 
 function deleteProblematique() {
@@ -160,14 +162,27 @@ function deleteProblematique() {
   updateUI();
 }
 
-function cancelProblematique() { hideModal("problematiqueModal"); }
+function cancelProblematique() {
+  hideModal("problematiqueModal");
+}
 
 // ======================
 // CRUD CATÉGORIES
 // ======================
 
+function handleCategorieClick() {
+  if (currentUser.role !== "admin") {
+    alert("Accès réservé à l'administrateur.");
+    return;
+  }
+  showCategorieChoiceModal();
+}
+
+function showCategorieChoiceModal() {
+  showModal("categorieChoiceModal");
+}
+
 function showCategorieModal(mode, id = null) {
-  // Ferme toutes les modales ouvertes
   hideModal("categorieChoiceModal");
   hideModal("categorieListModal");
 
@@ -220,17 +235,14 @@ function saveCategorie() {
   localStorage.setItem("problematiques", JSON.stringify(problematiques));
   hideModal("categorieModal");
   updateCategorieSelect();
-  renderProblematiques(); // <-- Ajout de cette ligne
+  renderProblematiques();
 }
 
 function updateCategorieSelect() {
   const select = document.getElementById("problematiqueCategorie");
   if (!select) return;
 
-  // Vide les options existantes
   select.innerHTML = "";
-
-  // Ajoute une option vide par défaut
   const defaultOption = document.createElement("option");
   defaultOption.value = "";
   defaultOption.textContent = "--- Sélectionnez une catégorie ---";
@@ -238,7 +250,6 @@ function updateCategorieSelect() {
   defaultOption.selected = true;
   select.appendChild(defaultOption);
 
-  // Ajoute chaque catégorie comme option
   Object.keys(categories).forEach(key => {
     const option = document.createElement("option");
     option.value = key;
@@ -247,35 +258,8 @@ function updateCategorieSelect() {
   });
 }
 
-// Affiche la modale de choix (Ajouter/Modifier)
-function showCategorieChoiceModal() {
-  showModal("categorieChoiceModal");
-}
-
-// Affiche la modale d'ajout ou de modification
-function showCategorieModal(mode, id = null) {
-  const modalTitle = document.getElementById("categorieModalTitle");
-  if (mode === "add") {
-    modalTitle.textContent = "Nouvelle catégorie";
-    document.getElementById("categorieNom").value = "";
-    document.getElementById("categorieCouleur").value = "#FF9800";
-    editingCategorieId = null;
-  } else if (mode === "edit" && id) {
-    modalTitle.textContent = "Modifier la catégorie";
-    const categorie = categories[id];
-    document.getElementById("categorieNom").value = categorie.label;
-    document.getElementById("categorieCouleur").value = categorie.color;
-    editingCategorieId = id;
-  }
-  hideModal("categorieListModal");
-  hideModal("categorieChoiceModal"); // Ferme la liste avant d'ouvrir l'édition
-
-  showModal("categorieModal");
-}
-
-// Affiche la liste des catégories
 function showCategorieListModal() {
-  hideModal("categorieChoiceModal"); // Ferme la modale de choix
+  hideModal("categorieChoiceModal");
   const container = document.getElementById("categorieListContainer");
   container.innerHTML = "";
 
@@ -299,7 +283,6 @@ function showCategorieListModal() {
   showModal("categorieListModal");
 }
 
-// Confirme la suppression d'une catégorie
 function confirmDeleteCategorie(id) {
   const categorie = categories[id];
   const count = problematiques.filter(p => p.categorie === id).length;
@@ -312,7 +295,7 @@ function confirmDeleteCategorie(id) {
   delete categories[id];
   localStorage.setItem("categories", JSON.stringify(categories));
   updateCategorieSelect();
-  hideModal("categorieListModal"); // Ferme la modale de liste
+  hideModal("categorieListModal");
   updateUI();
 }
 
@@ -322,15 +305,14 @@ function confirmDeleteCategorie(id) {
 
 function renderByMetier(problematiques) {
   const container = document.getElementById("metiersList");
-  if(!container) return;
+  if (!container) return;
   container.innerHTML = "";
 
-  // Tri par date décroissante
-  problematiques.sort((a,b)=>new Date(b.dateDeb) - new Date(a.dateDeb));
+  problematiques.sort((a, b) => new Date(b.dateDeb) - new Date(a.dateDeb));
 
   const grouped = {};
   problematiques.forEach(p => {
-    if(!grouped[p.métier]) grouped[p.métier] = [];
+    if (!grouped[p.métier]) grouped[p.métier] = [];
     grouped[p.métier].push(p);
   });
 
@@ -372,15 +354,14 @@ function renderByMetier(problematiques) {
 
 function renderByProblematique(problematiques) {
   const container = document.getElementById("problematiquesGrid");
-  if(!container) return;
+  if (!container) return;
   container.innerHTML = "";
 
-  // Tri par date décroissante
-  problematiques.sort((a,b)=>new Date(b.dateDeb) - new Date(a.dateDeb));
+  problematiques.sort((a, b) => new Date(b.dateDeb) - new Date(a.dateDeb));
 
   const grouped = {};
   problematiques.forEach(p => {
-    if(!grouped[p.categorie]) grouped[p.categorie] = [];
+    if (!grouped[p.categorie]) grouped[p.categorie] = [];
     grouped[p.categorie].push(p);
   });
 
@@ -426,8 +407,8 @@ function renderByProblematique(problematiques) {
 
 function renderProblematiques() {
   const userProblematiques = getUserProblematiques();
-  if(currentTab === "byMetier") renderByMetier(userProblematiques);
-  else if(currentTab === "byProblematique") renderByProblematique(userProblematiques);
+  if (currentTab === "byMetier") renderByMetier(userProblematiques);
+  else if (currentTab === "byProblematique") renderByProblematique(userProblematiques);
 }
 
 // ======================
@@ -436,13 +417,13 @@ function renderProblematiques() {
 
 function togglePreview(typeId) {
   const preview = document.getElementById(`preview-${typeId}`);
-  if(!preview) return;
+  if (!preview) return;
   preview.style.display = preview.style.display === "none" ? "block" : "none";
 }
 
 function toggleGroup(id) {
   const el = document.getElementById(id);
-  if(!el) return;
+  if (!el) return;
   el.classList.toggle("open");
 }
 
@@ -460,20 +441,20 @@ document.addEventListener("DOMContentLoaded", () => {
   const bottomBar = document.getElementById("bottomBar");
   const splash = document.getElementById("splashScreen");
 
-  if(authScreen) authScreen.style.display = "none";
-  if(mainScreen) mainScreen.style.display = "none";
-  if(bottomBar) bottomBar.style.display = "none";
-  if(splash) splash.style.display = "block";
+  if (authScreen) authScreen.style.display = "none";
+  if (mainScreen) mainScreen.style.display = "none";
+  if (bottomBar) bottomBar.style.display = "none";
+  if (splash) splash.style.display = "block";
 
   setTimeout(() => {
-    if(splash) splash.style.display = "none";
+    if (splash) splash.style.display = "none";
     const user = localStorage.getItem("user");
-    if(user){
+    if (user) {
       currentUser = JSON.parse(user);
-      if(mainScreen) mainScreen.style.display = "block";
-      if(bottomBar) bottomBar.style.display = "flex";
+      if (mainScreen) mainScreen.style.display = "block";
+      if (bottomBar) bottomBar.style.display = "flex";
       updateUI();
-    } else if(authScreen){
+    } else if (authScreen) {
       authScreen.style.display = "flex";
     }
   }, 1000);
@@ -485,7 +466,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 function authenticate() {
   const code = document.getElementById("userCode").value.trim();
-  if(codesValides[code]){
+  if (codesValides[code]) {
     currentUser = codesValides[code];
     localStorage.setItem("user", JSON.stringify(currentUser));
     document.getElementById("authScreen").style.display = "none";
@@ -506,14 +487,14 @@ function logout() {
   hideModal("moreModal");
   localStorage.removeItem("user");
   currentUser = null;
-  if(document.getElementById("authScreen")) document.getElementById("authScreen").style.display = "flex";
-  if(document.getElementById("mainScreen")) document.getElementById("mainScreen").style.display = "none";
-  if(document.getElementById("bottomBar")) document.getElementById("bottomBar").style.display = "none";
-  if(document.getElementById("userCode")) document.getElementById("userCode").value = "";
+  if (document.getElementById("authScreen")) document.getElementById("authScreen").style.display = "flex";
+  if (document.getElementById("mainScreen")) document.getElementById("mainScreen").style.display = "none";
+  if (document.getElementById("bottomBar")) document.getElementById("bottomBar").style.display = "none";
+  if (document.getElementById("userCode")) document.getElementById("userCode").value = "";
 }
 
 function resetData() {
-  if(!confirm("Réinitialiser toutes les données ?")) return;
+  if (!confirm("Réinitialiser toutes les données ?")) return;
   problematiques = [];
   localStorage.removeItem("problematiques");
   updateUI();
@@ -542,11 +523,13 @@ function showTab(tabId) {
   document.querySelectorAll(".tab-content").forEach(el => el.style.display = "none");
   document.querySelectorAll(".tab-btn").forEach(btn => btn.classList.remove("active"));
   const tab = document.getElementById(tabId);
-  if(tab) tab.style.display = "block";
+  if (tab) tab.style.display = "block";
   const btn = document.querySelector(`[onclick="showTab('${tabId}')"]`);
-  if(btn) btn.classList.add("active");
+  if (btn) btn.classList.add("active");
   currentTab = tabId;
   renderProblematiques();
 }
 
-function showMoreModal() { showModal("moreModal"); }
+function showMoreModal() {
+  showModal("moreModal");
+}
