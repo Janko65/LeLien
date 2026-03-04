@@ -88,8 +88,13 @@ function showProblematiqueModal() {
  const dateInput = document.getElementById("problematiqueDateDeb");
  dateInput.value = today;
  dateInput.min = today;
- // Masquer le champ métier par défaut
- document.getElementById("problematiqueMetier").style.display = "none";
+ // Afficher le champ métier uniquement pour l'admin
+ const metierSelect = document.getElementById("problematiqueMetier");
+ if (currentUser.role === "admin") {
+   metierSelect.style.display = "block";
+ } else {
+   metierSelect.style.display = "none";
+ }
  document.getElementById("saveProblematiqueBtn").style.display = "block";
  document.getElementById("deleteProblematiqueBtn").style.display = "none";
  updateCategorieSelect();
@@ -106,7 +111,7 @@ function openProblematique(id) {
  document.getElementById("problematiqueCategorie").value = p.categorie;
  document.getElementById("problematiqueDiffusion").value = p.diffusion;
  document.getElementById("problematiqueDateDeb").value = new Date(p.dateDeb).toISOString().split("T")[0];
- // Afficher/masquer le champ métier selon le rôle
+ // Afficher le champ métier uniquement pour l'admin
  const metierSelect = document.getElementById("problematiqueMetier");
  if (currentUser.role === "admin") {
    metierSelect.style.display = "block";
@@ -128,6 +133,7 @@ function saveProblematique() {
  const categorie = document.getElementById("problematiqueCategorie").value;
  const diffusion = document.getElementById("problematiqueDiffusion").value;
  const dateDeb = document.getElementById("problematiqueDateDeb").value;
+ // Récupérer le métier sélectionné par l'admin, sinon utiliser le métier de l'utilisateur courant
  const métier = currentUser.role === "admin" ? document.getElementById("problematiqueMetier").value : currentUser.métier;
  if (!titre || !description) {
    alert("Titre et description requis !");
