@@ -99,27 +99,29 @@ function showProblematiqueModal() {
 }
 
 function openProblematique(id) {
-  const p = problematiques.find(p => p.id === id);
-  if (!p) return;
-  editingId = id;
-
-  document.getElementById("modalTitle").textContent = "Consulter la problématique";
-  document.getElementById("problematiqueTitre").value = p.titre;
-  document.getElementById("problematiqueDescription").value = p.description;
-  document.getElementById("problematiqueCategorie").value = p.categorie;
-  document.getElementById("problematiqueDiffusion").value = p.diffusion;
-  document.getElementById("problematiqueDateDeb").value =
-    new Date(p.dateDeb).toISOString().split("T")[0];
-
-  const canEdit = currentUser.role === "admin" || p.métier === currentUser.métier;
-
-  ["problematiqueTitre","problematiqueDescription","problematiqueCategorie","problematiqueDiffusion","problematiqueDateDeb"]
-    .forEach(id => document.getElementById(id).disabled = !canEdit);
-
-  document.getElementById("saveProblematiqueBtn").style.display = canEdit ? "block" : "none";
-  document.getElementById("deleteProblematiqueBtn").style.display = canEdit ? "block" : "none";
-
-  showModal("problematiqueModal");
+ const p = problematiques.find(p => p.id === id);
+ if (!p) return;
+ editingId = id;
+ document.getElementById("modalTitle").textContent = "Consulter la problématique";
+ document.getElementById("problematiqueTitre").value = p.titre;
+ document.getElementById("problematiqueDescription").value = p.description;
+ document.getElementById("problematiqueCategorie").value = p.categorie;
+ document.getElementById("problematiqueDiffusion").value = p.diffusion;
+ document.getElementById("problematiqueDateDeb").value = new Date(p.dateDeb).toISOString().split("T")[0];
+ // Afficher/masquer le champ métier selon le rôle
+ const metierSelect = document.getElementById("problematiqueMetier");
+ if (currentUser.role === "admin") {
+   metierSelect.style.display = "block";
+   metierSelect.value = p.métier;
+ } else {
+   metierSelect.style.display = "none";
+ }
+ const canEdit = currentUser.role === "admin" || p.métier === currentUser.métier;
+ ["problematiqueTitre","problematiqueDescription","problematiqueCategorie","problematiqueDiffusion","problematiqueDateDeb"]
+   .forEach(id => document.getElementById(id).disabled = !canEdit);
+ document.getElementById("saveProblematiqueBtn").style.display = canEdit ? "block" : "none";
+ document.getElementById("deleteProblematiqueBtn").style.display = canEdit ? "block" : "none";
+ showModal("problematiqueModal");
 }
 
 function saveProblematique() {
