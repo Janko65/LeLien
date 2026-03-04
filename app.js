@@ -123,36 +123,33 @@ function openProblematique(id) {
 }
 
 function saveProblematique() {
-  const titre = document.getElementById("problematiqueTitre").value.trim();
-  const description = document.getElementById("problematiqueDescription").value.trim();
-  const categorie = document.getElementById("problematiqueCategorie").value;
-  const diffusion = document.getElementById("problematiqueDiffusion").value;
-  const dateDeb = document.getElementById("problematiqueDateDeb").value;
-
-  if (!titre || !description) {
-    alert("Titre et description requis !");
-    return;
-  }
-
-  // Vérification de la catégorie
-  if (!categorie) {
-    alert("Veuillez sélectionner une catégorie !");
-    return;
-  }
-
-  const problematique = {
-    id: editingId || Date.now().toString(),
-    titre, description, categorie, diffusion,
-    dateDeb: new Date(dateDeb).toISOString(),
-    métier: currentUser.métier, nomUtilisateur: currentUser.nom
-  };
-
-  if (editingId) problematiques = problematiques.map(p => p.id === editingId ? problematique : p);
-  else problematiques.push(problematique);
-
-  localStorage.setItem("problematiques", JSON.stringify(problematiques));
-  hideModal("problematiqueModal");
-  updateUI();
+ const titre = document.getElementById("problematiqueTitre").value.trim();
+ const description = document.getElementById("problematiqueDescription").value.trim();
+ const categorie = document.getElementById("problematiqueCategorie").value;
+ const diffusion = document.getElementById("problematiqueDiffusion").value;
+ const dateDeb = document.getElementById("problematiqueDateDeb").value;
+ const métier = editingId
+   ? problematiques.find(p => p.id === editingId).métier
+   : (currentUser.role === "admin" ? document.getElementById("problematiqueMetier").value : currentUser.métier);
+ if (!titre || !description) {
+   alert("Titre et description requis !");
+   return;
+ }
+ if (!categorie) {
+   alert("Veuillez sélectionner une catégorie !");
+   return;
+ }
+ const problematique = {
+   id: editingId || Date.now().toString(),
+   titre, description, categorie, diffusion,
+   dateDeb: new Date(dateDeb).toISOString(),
+   métier, nomUtilisateur: currentUser.nom
+ };
+ if (editingId) problematiques = problematiques.map(p => p.id === editingId ? problematique : p);
+ else problematiques.push(problematique);
+ localStorage.setItem("problematiques", JSON.stringify(problematiques));
+ hideModal("problematiqueModal");
+ updateUI();
 }
 
 function deleteProblematique() {
