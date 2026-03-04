@@ -294,3 +294,7 @@ select option:disabled {
   border-radius: 50%;
   margin-right: var(--space-2);
 }
+
+#problematiqueMetier {
+ display: none;
+}
