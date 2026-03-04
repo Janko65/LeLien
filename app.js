@@ -78,24 +78,22 @@ function setupModalClose() {
 // ======================
 
 function showProblematiqueModal() {
-  editingId = null;
-  document.getElementById("modalTitle").textContent = "Nouvelle problématique";
-  document.getElementById("problematiqueTitre").value = "";
-  document.getElementById("problematiqueDescription").value = "";
-  document.getElementById("problematiqueCategorie").value = "";
-  document.getElementById("problematiqueDiffusion").value = "all";
-
-  const today = new Date().toISOString().split("T")[0];
-  const dateInput = document.getElementById("problematiqueDateDeb");
-  dateInput.value = today;
-  dateInput.min = today;
-
-  document.getElementById("saveProblematiqueBtn").style.display = "block";
-  document.getElementById("deleteProblematiqueBtn").style.display = "none";
-
-  updateCategorieSelect(); // <-- Ajoute cette ligne
-
-  showModal("problematiqueModal");
+ editingId = null;
+ document.getElementById("modalTitle").textContent = "Nouvelle problématique";
+ document.getElementById("problematiqueTitre").value = "";
+ document.getElementById("problematiqueDescription").value = "";
+ document.getElementById("problematiqueCategorie").value = "";
+ document.getElementById("problematiqueDiffusion").value = "all";
+ const today = new Date().toISOString().split("T")[0];
+ const dateInput = document.getElementById("problematiqueDateDeb");
+ dateInput.value = today;
+ dateInput.min = today;
+ // Masquer le champ métier par défaut
+ document.getElementById("problematiqueMetier").style.display = "none";
+ document.getElementById("saveProblematiqueBtn").style.display = "block";
+ document.getElementById("deleteProblematiqueBtn").style.display = "none";
+ updateCategorieSelect();
+ showModal("problematiqueModal");
 }
 
 function openProblematique(id) {
@@ -117,7 +115,7 @@ function openProblematique(id) {
    metierSelect.style.display = "none";
  }
  const canEdit = currentUser.role === "admin" || p.métier === currentUser.métier;
- ["problematiqueTitre","problematiqueDescription","problematiqueCategorie","problematiqueDiffusion","problematiqueDateDeb"]
+ ["problematiqueTitre", "problematiqueDescription", "problematiqueCategorie", "problematiqueDiffusion", "problematiqueDateDeb"]
    .forEach(id => document.getElementById(id).disabled = !canEdit);
  document.getElementById("saveProblematiqueBtn").style.display = canEdit ? "block" : "none";
  document.getElementById("deleteProblematiqueBtn").style.display = canEdit ? "block" : "none";
