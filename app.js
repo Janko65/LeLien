@@ -361,7 +361,7 @@ function renderByMetier(problematiques) {
             </div>
           </div>
           <div class="problematique-preview" id="preview-metier-${p.id}" style="display:none;border:3px solid ${categories[p.categorie].color}"
-               ${canEdit ? `onclick="blematique('${p.id}')"` : ""}>
+               ${canEdit ? `onclick="openProblematique('${p.id}')"` : ""}>
             <div class="preview-content">
               <p>${p.description}</p>
             </div>
@@ -411,7 +411,7 @@ function renderByProblematique(problematiques) {
             </div>
           </div>
           <div class="problematique-preview" id="preview-categorie-${p.id}" style="display:none;border:3px solid ${metiers[p.métier].color}"
-               ${canEdit ? `onclick="blematique('${p.id}')"` : ""}>
+               ${canEdit ? `onclick="openProblematique('${p.id}')"` : ""}>
             <div class="preview-content">
               <p>${p.description}</p>
             </div>
