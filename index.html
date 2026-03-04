@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>LeLien - Gestion des problématiques</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Splash Screen -->
+  <div id="splashScreen">
+    <div class="splash-content">
+      <h1>LeLien</h1>
+      <p>Gestion collaborative</p>
+    </div>
+  </div>
+
+  <!-- Écran Connexion -->
+  <div id="authScreen" class="screen" style="display:none;">
+    <div class="auth-container">
+      <h2>Connexion</h2>
+      <input type="text" id="userCode" placeholder="Code utilisateur (ex: EDUC123)" autocomplete="off">
+      <button class="btn primary" onclick="authenticate()">Se connecter</button>
+    </div>
+  </div>
+
+  <!-- Écran Principal -->
+  <div id="mainScreen" class="screen" style="display:none;">
+
+    <header class="app-header">
+      <div class="user-greeting">
+        <span class="user-name">Bonjour, <span id="userName"></span></span>
+        <span class="user-status" id="userStatus"></span>
+      </div>
+      <button class="btn secondary menu-btn" onclick="showMoreModal()">⋮</button>
+    </header>
+
+    <!-- Onglets -->
+    <div class="tabs">
+      <button class="tab-btn active" onclick="showTab('byMetier')">Par métiers</button>
+      <button class="tab-btn" onclick="showTab('byProblematique')">Par thèmes</button>
+    </div>
+
+    <!-- Onglet Métiers -->
+    <div id="byMetier" class="tab-content active">
+      <div id="metiersList"></div>
+    </div>
+
+    <!-- Onglet Problématiques -->
+    <div id="byProblematique" class="tab-content" style="display:none;">
+      <div id="problematiquesGrid"></div>
+    </div>
+
+  </div>
+
+  <!-- Barre inférieure -->
+  <div class="bottom-bar" id="bottomBar" style="display:none;">
+    <button class="btn primary large" onclick="showProblematiqueModal()">
+      + Ajouter
+    </button>
+<button class="btn secondary" onclick="showCategorieChoiceModal()">Catégorie</button>
+  </div>
+
+  <!-- Modale Ajout / Édition -->
+  <div id="problematiqueModal" class="modal">
+    <div class="modal-content">
+
+      <h3 id="modalTitle">Nouvelle problématique</h3>
+
+      <input type="text" id="problematiqueTitre" placeholder="Titre" class="modal-input">
+
+      <textarea id="problematiqueDescription" placeholder="Description…" class="modal-textarea"></textarea>
+
+      <div class="date-picker">
+        <label>Début :</label>
+        <input type="date" id="problematiqueDateDeb" class="modal-input">
+      </div>
+
+      <select id="problematiqueCategorie" class="modal-input">
+        <option value="planning">Planning</option>
+        <option value="jeunes">Jeunes</option>
+        <option value="repas">Repas</option>
+      </select>
+
+      <select id="problematiqueDiffusion" class="modal-input">
+        <option value="all">À tous les métiers</option>
+        <option value="mine">Uniquement à mon métier</option>
+      </select>
+
+      <div class="modal-actions">
+        <button id="saveProblematiqueBtn" class="btn primary" onclick="saveProblematique()">Enregistrer</button>
+        <button id="deleteProblematiqueBtn" class="btn danger" onclick="deleteProblematique()">Supprimer</button>
+        <button class="btn secondary" onclick="cancelProblematique()">Annuler</button>
+      </div>
+    </div>
+  </div>
+
+<div id="categorieModal" class="modal">
+  <div class="modal-content">
+    <h3 id="categorieModalTitle">Nouvelle catégorie</h3>
+    <input type="text" id="categorieNom" class="modal-input" placeholder="Nom de la catégorie" autocomplete="off">
+    <div class="color-picker">
+      <label for="categorieCouleur">Couleur :</label>
+      <input type="color" id="categorieCouleur" value="#FF9800">
+    </div>
+    <div class="modal-actions">
+      <button class="btn primary" onclick="saveCategorie()">Enregistrer</button>
+      <button class="btn secondary" onclick="hideModal('categorieModal')">Annuler</button>
+    </div>
+  </div>
+</div>
+
+<div id="categorieChoiceModal" class="modal">
+  <div class="modal-content">
+    <h3>Gérer les catégories</h3>
+    <div class="modal-actions">
+      <button class="btn primary" onclick="showCategorieModal('add')">Ajouter</button>
+      <button class="btn secondary" onclick="showCategorieListModal()">Modifier</button>
+    </div>
+  </div>
+</div>
+
+<div id="categorieListModal" class="modal">
+  <div class="modal-content">
+    <h3>Liste des catégories</h3>
+    <div id="categorieListContainer" class="categorie-list"></div>
+    <div class="modal-actions">
+      <button class="btn secondary" onclick="hideModal('categorieListModal')">Fermer</button>
+    </div>
+  </div>
+</div>
+
+  <!-- Modale Options -->
+  <div id="moreModal" class="modal">
+    <div class="modal-content">
+
+      <h3>Options</h3>
+
+      <button class="btn secondary full" onclick="toggleTheme()">
+        Thème sombre / clair
+      </button>
+
+      <button class="btn secondary full" onclick="logout()">
+        Déconnexion
+      </button>
+
+      <button class="btn danger full" onclick="resetData()">
+        Réinitialiser les données
+      </button>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+
+</body>
+</html>

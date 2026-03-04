@@ -1,0 +1,299 @@
+/* ===================== VARIABLES & THEME ===================== */
+:root {
+  --bg: #0f1115;
+  --panel: #1a1d23;
+  --panel-alt: #20242c;
+  --text: #f2f2f2;
+  --muted: #9aa0a6;
+
+  --green: #65B446;
+  --red: #CC4439;
+  --gray: #3a3f4b;
+  --border: #2a2f3a;
+
+  --radius: 16px;
+  --radius-sm: 10px;
+  --space-1: 8px;
+  --space-2: 12px;
+  --space-3: 16px;
+  --space-4: 20px;
+
+  --educateur-color: #4285F4;
+  --veilleur-color: #4CAF50;
+  --medecin-color: #F44336;
+  --admin-color: #9C27B0;
+
+  --planning-color: #FF9800;
+  --jeunes-color: #00BCD4;
+  --repas-color: #E91E63;
+}
+
+[data-theme="light"] {
+  --bg: #f9f9f9;
+  --panel: #ffffff;
+  --panel-alt: #f2f2f2;
+  --text: #111111;
+  --muted: #555555;
+  --gray: #c0c0c0;
+  --border: #dddddd;
+}
+
+/* ===================== RESET ===================== */
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html, body { margin: 0; height: 100%; background: var(--bg); color: var(--text); font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif; overflow: hidden; }
+
+/* ===================== HEADER ===================== */
+.app-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 var(--space-3);
+  height: 60px;
+  background: var(--panel);
+  border-bottom: 1px solid var(--border);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+}
+.app-header .user-greeting { display: flex; flex-direction: column; justify-content: center; gap: 2px; }
+.app-header .user-name { font-size: 16px; font-weight: 600; margin: 0; }
+.app-header .user-status { font-size: 12px; color: var(--muted); margin: 0; }
+.app-header .menu-btn { height: 36px; width: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; }
+
+/* ===================== ONGLETS FIXES ===================== */
+.tabs {
+  display: flex;
+  border-bottom: 1px solid var(--border);
+  position: fixed;
+  top: 60px;
+  left: 0;
+  right: 0;
+  background: var(--panel);
+  z-index: 99;
+}
+.tab-btn { flex: 1; padding: var(--space-2); background: none; border: none; color: var(--muted); font-weight: 600; font-size: 14px; }
+.tab-btn.active { color: var(--text); border-bottom: 3px solid var(--green); }
+
+/* ===================== CONTENU SCROLLABLE ===================== */
+.screen {
+  position: absolute;
+  top: 102px; /* header + onglets */
+  left: 0;
+  right: 0;
+  bottom: 60px; /* bottom-bar */
+  overflow-y: auto;
+  padding: var(--space-3);
+}
+
+/* ===================== BUTTONS ===================== */
+.btn {
+  height: 48px;
+  padding: 0 var(--space-3);
+  border-radius: var(--radius-sm);
+  border: 1px solid #000;
+  font-weight: 600;
+  font-size: 15px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+.btn.primary { background: var(--green); color: #fff; }
+.btn.secondary { background: var(--gray); color: var(--text); }
+.btn.danger { background: var(--red); color: #fff; }
+
+/* ===================== GROUP CARD ===================== */
+.group-card {
+  background: var(--panel);
+  margin-bottom: var(--space-2);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  border-left: 4px solid;
+  overflow: hidden;
+}
+.group-header { padding: var(--space-3); font-weight: 600; display: flex; justify-content: space-between; align-items: center; }
+.group-content { display: none; padding: var(--space-2) var(--space-3); border-top: 1px solid var(--border); }
+.group-content.open { display: block; }
+
+/* ===================== PROBLÉMATIQUES ===================== */
+.problematique-item {
+  padding: var(--space-2) 0;
+  border-bottom: 1px solid var(--border);
+  border-right: 3px solid transparent;
+  font-size: 14px;
+  cursor: pointer;
+  margin-bottom: 0;
+}
+.problematique-item:last-child { border-bottom: none; }
+
+/* ===================== PREVIEW ===================== */
+.problematique-preview {
+  background: var(--panel-alt);
+  padding: var(--space-2);
+  margin: 0;
+  border-radius: var(--radius-sm) 0 var(--radius-sm) var(--radius-sm);
+  border: 3px solid transparent;
+}
+.preview-content p {
+  font-size: 14px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* ===================== ITEM HEADER pour date/titre/catégorie ===================== */
+.item-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.item-date { font-size: 12px; color: var(--muted); min-width: 95px; }
+.item-title { flex: 1; text-align: center; }
+.item-context { font-size: 12px; color: var(--muted); min-width: 95px; text-align: right; padding-right: 10px; }
+
+/* ===================== BADGE ===================== */
+.badge {
+  background: var(--gray);
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+}
+
+/* ===================== BOTTOM BAR ===================== */
+.bottom-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  background: var(--panel);
+  border-top: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-3);
+}
+
+/* ===================== MODAL ===================== */
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.6);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 200;
+}
+.modal-content {
+  width: 92%;
+  max-width: 400px;
+  background: var(--panel);
+  padding: var(--space-4);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  overflow: hidden;
+  box-sizing: border-box;
+}
+.modal-input,
+.modal-textarea {
+  width: 100%;
+  height: 48px;
+  border-radius: var(--radius-sm);
+  border: 1px solid #000;
+  background: var(--panel-alt);
+  color: var(--text);
+  font-size: 15px;
+  padding: 0 var(--space-2);
+  margin-bottom: var(--space-2);
+}
+.modal-textarea { height: 110px; resize: none; padding-top: var(--space-2); }
+
+/* ===================== MODAL BUTTONS ===================== */
+.modal-actions {
+  display: flex;
+  gap: var(--space-2);
+  width: 100%;
+}
+.modal-actions .btn {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 0 var(--space-2);
+  line-height: 1.2;
+  height: 42px;
+  font-weight: 600;
+  font-size: 15px;
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+  border: 1px solid #000;
+}
+.modal-actions .btn.primary { background: var(--green); color: #fff; }
+.modal-actions .btn.secondary { background: var(--gray); color: var(--text); }
+.modal-actions .btn.danger { background: var(--red); color: #fff; }
+
+/* ===================== DATES ===================== */
+.date-picker { overflow: hidden; }
+.date-picker input { width: 100%; max-width: 100%; box-sizing: border-box; }
+input[type="date"] {
+  width: 100%; max-width: 100%; min-width: 0; box-sizing: border-box; appearance: none; -webkit-appearance: none;
+}
+
+html { touch-action: manipulation; }
+
+/* Ajout pour le sélecteur de couleur des catégories */
+.color-picker {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-bottom: var(--space-2);
+}
+.color-picker label {
+  font-size: 14px;
+  color: var(--text);
+}
+.color-picker input[type="color"] {
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: none;
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+/* Style pour l'option désactivée dans les selects */
+select option:disabled {
+  color: var(--muted);
+}
+/* Style pour la liste des catégories */
+.categorie-list {
+  max-height: 300px;
+  overflow-y: auto;
+  margin-bottom: var(--space-3);
+}
+.categorie-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-2);
+  border-bottom: 1px solid var(--border);
+}
+.categorie-item:last-child {
+  border-bottom: none;
+}
+.categorie-actions {
+  display: flex;
+  gap: var(--space-2);
+}
+.categorie-color {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  margin-right: var(--space-2);
+}
