@@ -494,11 +494,24 @@ function logout() {
 }
 
 function resetData() {
-  if (!confirm("Réinitialiser toutes les données ?")) return;
-  problematiques = [];
-  localStorage.removeItem("problematiques");
-  updateUI();
-  hideModal("moreModal");
+ if (!confirm("Êtes-vous sûr de vouloir réinitialiser TOUTES les données ? Cette action est irréversible.")) return;
+ // Supprime toutes les données du localStorage
+ localStorage.clear();
+ // Réinitialise les variables en mémoire
+ problematiques = [];
+ categories = {
+   catégorie1: { label: "Planning", icon: "", color: "#FF9800" },
+   catégorie2: { label: "Entretien", icon: "", color: "#00BCD4" },
+ };
+ currentUser = null;
+ currentTheme = "dark";
+ // Redirige vers l'écran de connexion
+ if (document.getElementById("authScreen")) document.getElementById("authScreen").style.display = "flex";
+ if (document.getElementById("mainScreen")) document.getElementById("mainScreen").style.display = "none";
+ if (document.getElementById("bottomBar")) document.getElementById("bottomBar").style.display = "none";
+ // Met à jour l'UI
+ updateUI();
+ hideModal("moreModal");
 }
 
 // ======================
