@@ -3,24 +3,23 @@
 // ======================
 
 const codesValides = {
-  "EDUC123": { nom: "Jean Dupont", métier: "educateur", role: "user" },
-  "VEIL456": { nom: "Marie Martin", métier: "veilleur", role: "user" },
-  "MED789": { nom: "Dr. Dupuis", métier: "medecin", role: "user" },
-  "ADMIN000": { nom: "Admin", métier: "admin", role: "admin" }
+  "CADRE1": { nom: "Jean Dupont", métier: "métier1", role: "user" },
+  "TECH1": { nom: "Marie Martin", métier: "métier2", role: "user" },
+  "DIR1": { nom: "Directeur Dupuis", métier: "métier3", role: "user" },
+  "ADMIN0": { nom: "Admin", métier: "admin", role: "admin" }
 };
 
 const metiers = {
-  educateur: { label: "Éducateurs", color: "var(--educateur-color)" },
-  veilleur: { label: "Veilleurs", color: "var(--veilleur-color)" },
-  medecin: { label: "Médecins", color: "var(--medecin-color)" },
+  métier1: { label: "Cadres", color: "var(--métier1-color)" },
+  métier2: { label: "Techniciens", color: "var(--métier2-color)" },
+  métier3: { label: "Dirigeants", color: "var(--métier3-color)" },
   admin: { label: "Admin", color: "var(--admin-color)" }
 };
 
 // Catégories dynamiques (chargées depuis localStorage ou valeurs par défaut)
 let categories = JSON.parse(localStorage.getItem("categories")) || {
-  planning: { label: "Planning", icon: "📅", color: "#FF9800" },
-  jeunes: { label: "Jeunes", icon: "👥", color: "#00BCD4" },
-  repas: { label: "Repas", icon: "🍽️", color: "#E91E63" }
+  catégorie1: { label: "Planning", icon: "", color: "#FF9800" },
+  catégorie2: { label: "Entretien", icon: "", color: "#00BCD4" },
 };
 
 let editingCategorieId = null;
@@ -498,7 +497,7 @@ function authenticate() {
     updateUI();
     applyTheme();
   } else {
-    alert("Code invalide ! Essaie : EDUC123, VEIL456, MED789, ADMIN000");
+    alert("Code invalide !");
   }
 }
 
