@@ -296,5 +296,5 @@ select option:disabled {
 }
 
 #problematiqueMetier {
- display: none;
+ display: none !important;
 }
