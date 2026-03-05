@@ -525,7 +525,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const mainScreen = document.getElementById("mainScreen");
   const bottomBar = document.getElementById("bottomBar");
   const splash = document.getElementById("splashScreen");
-  const searchBanner = document.getElementById("searchBanner"); // Utilise getElementById
+  const searchBanner = document.getElementById("searchBanner");
+  const searchInput = document.getElementById("searchInput");
+  const searchOverlay = document.getElementById("searchOverlay"); // overlay neutralisé
 
   // Masque tout au démarrage
   if (authScreen) authScreen.style.display = "none";
@@ -534,66 +536,73 @@ document.addEventListener("DOMContentLoaded", () => {
   if (searchBanner) searchBanner.style.display = "none";
   if (splash) splash.style.display = "block";
 
-  // Après 1s, vérifie l'utilisateur connecté
+  // Splash + login auto
   setTimeout(() => {
     if (splash) splash.style.display = "none";
     const user = localStorage.getItem("user");
-
-if (user) {
-  setUser(JSON.parse(user));
-} else {
-  setUser(null);
-}
+    if (user) setUser(JSON.parse(user));
+    else setUser(null);
   }, 1000);
 
+  // ============================
+  //        🔍 MODE RECHERCHE
+  // ============================
+
   let isSearchMode = false;
-const searchInput = document.getElementById("searchInput");
-const searchOverlay = document.getElementById("searchOverlay");
 
-/* ---- Entrée en mode recherche ---- */
-function enterSearchMode() {
+  // ---- Entrée en mode recherche ----
+  function enterSearchMode() {
     if (isSearchMode) return;
-
     isSearchMode = true;
+
     document.body.classList.add("search-mode");
     searchBanner.classList.add("search-bar-top");
-    searchOverlay.style.display = "block";
-}
 
-/* ---- Sortie du mode recherche ---- */
-function exitSearchMode() {
+    // Overlay totalement désactivé
+    if (searchOverlay) searchOverlay.style.display = "none";
+  }
+
+  // ---- Sortie du mode recherche ----
+  function exitSearchMode() {
+    if (!isSearchMode) return;
+
     isSearchMode = false;
     document.body.classList.remove("search-mode");
     searchBanner.classList.remove("search-bar-top");
-    searchOverlay.style.display = "none";
+
+    // Ne vide PAS la recherche
     searchInput.blur();
-    // searchInput.value = "";  // ❌ on ne vide plus
-    renderProblematiques();
-}
 
-/* ---- Détection du focus sur l’input ---- */
-searchInput.addEventListener("focus", enterSearchMode);
+    // Refiltre selon le texte restant
+    searchProblematiques();
+  }
 
-/* ---- Si on efface le texte ---- */
-searchInput.addEventListener("input", () => {
-    const q = searchInput.value.trim();
+  // Focus sur la barre → mode recherche ON
+  searchInput.addEventListener("focus", enterSearchMode);
 
-    if (q === "") {
-        renderProblematiques(); // vide les résultats
+  // Saisie → filtrage en direct
+  searchInput.addEventListener("input", searchProblematiques);
+
+  // ---- Clic hors barre → quitter SANS vider ----
+  document.addEventListener("click", (e) => {
+    if (!isSearchMode) return;
+
+    // Si on clique DANS la barre → ne rien faire
+    if (e.target.closest("#searchBanner")) return;
+
+    // Sinon on sort du mode recherche, texte conservé
+    exitSearchMode();
+  });
+
+  // Repli clavier (mobile)
+  window.addEventListener("resize", () => {
+    if (!isSearchMode) return;
+
+    // Si on n'est plus en train d’écrire → quitter
+    if (document.activeElement !== searchInput) {
+      exitSearchMode();
     }
-});
-
-/* ---- Clic hors zone → quitter ---- */
-searchOverlay.addEventListener("click", exitSearchMode);
-
-/* ---- Repli du clavier ---- */
-window.addEventListener("resize", () => {
-    // Heuristique : si le clavier se replie, la hauteur remonte
-    if (isSearchMode && searchInput.value.trim() === "") {
-        exitSearchMode();
-    }
-});
-
+  });
 });
 
 // ======================
