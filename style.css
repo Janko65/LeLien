@@ -22,7 +22,6 @@
   --métier2-color: #4CAF50;
   --métier3-color: #F44336;
   --admin-color: #9C27B0;
-  
 }
 
 [data-theme="light"] {
@@ -37,7 +36,14 @@
 
 /* ===================== RESET ===================== */
 * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-html, body { margin: 0; height: 100%; background: var(--bg); color: var(--text); font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif; overflow: hidden; }
+html, body {
+  margin: 0;
+  height: 100%;
+  background: var(--bg);
+  color: var(--text);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  overflow: hidden;
+}
 
 /* ===================== HEADER ===================== */
 .app-header {
@@ -57,7 +63,15 @@ html, body { margin: 0; height: 100%; background: var(--bg); color: var(--text);
 .app-header .user-greeting { display: flex; flex-direction: column; justify-content: center; gap: 2px; }
 .app-header .user-name { font-size: 16px; font-weight: 600; margin: 0; }
 .app-header .user-status { font-size: 12px; color: var(--muted); margin: 0; }
-.app-header .menu-btn { height: 36px; width: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; }
+.app-header .menu-btn {
+  height: 36px;
+  width: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+}
 
 /* ===================== ONGLETS FIXES ===================== */
 .tabs {
@@ -70,16 +84,27 @@ html, body { margin: 0; height: 100%; background: var(--bg); color: var(--text);
   background: var(--panel);
   z-index: 99;
 }
-.tab-btn { flex: 1; padding: var(--space-2); background: none; border: none; color: var(--muted); font-weight: 600; font-size: 14px; }
-.tab-btn.active { color: var(--text); border-bottom: 3px solid var(--green); }
+.tab-btn {
+  flex: 1;
+  padding: var(--space-2);
+  background: none;
+  border: none;
+  color: var(--muted);
+  font-weight: 600;
+  font-size: 14px;
+}
+.tab-btn.active {
+  color: var(--text);
+  border-bottom: 3px solid var(--green);
+}
 
 /* ===================== CONTENU SCROLLABLE ===================== */
 .screen {
   position: absolute;
-  top: 102px; /* header + onglets */
+  top: 102px;
   left: 0;
   right: 0;
-  bottom: 120px; /* 60px (bottom-bar) + 60px (search-banner) */
+  bottom: 120px;
   overflow-y: auto;
   padding: var(--space-3);
 }
@@ -111,8 +136,18 @@ html, body { margin: 0; height: 100%; background: var(--bg); color: var(--text);
   border-left: 4px solid;
   overflow: hidden;
 }
-.group-header { padding: var(--space-3); font-weight: 600; display: flex; justify-content: space-between; align-items: center; }
-.group-content { display: none; padding: var(--space-2) var(--space-3); border-top: 1px solid var(--border); }
+.group-header {
+  padding: var(--space-3);
+  font-weight: 600;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.group-content {
+  display: none;
+  padding: var(--space-2) var(--space-3);
+  border-top: 1px solid var(--border);
+}
 .group-content.open { display: block; }
 
 /* ===================== PROBLÉMATIQUES ===================== */
@@ -133,7 +168,7 @@ html, body { margin: 0; height: 100%; background: var(--bg); color: var(--text);
   margin: 0;
   border-radius: var(--radius-sm) 0 var(--radius-sm) var(--radius-sm);
   border: 3px solid transparent;
-display: none;
+  display: none;
 }
 .preview-content p {
   font-size: 14px;
@@ -142,7 +177,7 @@ display: none;
   word-break: break-word;
 }
 
-/* ===================== ITEM HEADER pour date/titre/catégorie ===================== */
+/* ===================== ITEM HEADER ===================== */
 .item-header {
   display: flex;
   align-items: center;
@@ -240,36 +275,31 @@ display: none;
 .date-picker { overflow: hidden; }
 .date-picker input { width: 100%; max-width: 100%; box-sizing: border-box; }
 input[type="date"] {
-  width: 100%; max-width: 100%; min-width: 0; box-sizing: border-box; appearance: none; -webkit-appearance: none;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  appearance: none;
+  -webkit-appearance: none;
 }
-
 html { touch-action: manipulation; }
 
-/* Ajout pour le sélecteur de couleur des catégories */
+/* ===================== CATEGORIES ===================== */
 .color-picker {
   display: flex;
   align-items: center;
   gap: var(--space-2);
   margin-bottom: var(--space-2);
 }
-.color-picker label {
-  font-size: 14px;
-  color: var(--text);
-}
+.color-picker label { font-size: 14px; color: var(--text); }
 .color-picker input[type="color"] {
   width: 40px;
   height: 40px;
-  padding: 0;
   border: none;
   cursor: pointer;
   border-radius: var(--radius-sm);
-  overflow: hidden;
 }
-/* Style pour l'option désactivée dans les selects */
-select option:disabled {
-  color: var(--muted);
-}
-/* Style pour la liste des catégories */
+select option:disabled { color: var(--muted); }
 .categorie-list {
   max-height: 300px;
   overflow-y: auto;
@@ -282,35 +312,30 @@ select option:disabled {
   padding: var(--space-2);
   border-bottom: 1px solid var(--border);
 }
-.categorie-item:last-child {
-  border-bottom: none;
-}
-.categorie-actions {
-  display: flex;
-  gap: var(--space-2);
-}
+.categorie-item:last-child { border-bottom: none; }
+.categorie-actions { display: flex; gap: var(--space-2); }
 .categorie-color {
   width: 20px;
   height: 20px;
   border-radius: 50%;
   margin-right: var(--space-2);
 }
-/* ===================== SEARCH & EXPAND/COLLAPSE BANNERS ===================== */
+
 /* ===================== SEARCH BANNER ===================== */
 .search-banner {
   background: var(--panel);
   border-top: 1px solid var(--border);
   padding: var(--space-2);
   position: fixed;
-  bottom: 60px; /* Juste au-dessus de la bottom-bar */
+  bottom: 60px;
   left: 0;
   right: 0;
-  z-index: 99;
+  z-index: 150 !important;            /* ↑↑ assure le clic */
   display: flex;
   align-items: center;
   justify-content: center;
+  pointer-events: auto;                /* ↑↑ rend cliquable */
 }
-
 .search-banner input {
   width: 90%;
   height: 40px;
@@ -319,5 +344,53 @@ select option:disabled {
   border: 1px solid var(--border);
   background: var(--panel-alt);
   color: var(--text);
+  position: relative;                  /* ↑ au-dessus */
+  z-index: 151;
+  pointer-events: auto;
 }
 
+/* ===================== MODE RECHERCHE ===================== */
+/* Flouter uniquement l'UI (header, tabs, bottom bar) */
+.search-mode .app-header,
+.search-mode .tabs,
+.search-mode .bottom-bar {
+  filter: blur(6px) !important;
+}
+
+/* Ne PAS flouter le contenu */
+.search-mode .screen,
+.search-mode #mainScreen,
+.search-mode #byMetier,
+.search-mode #byProblematique,
+.search-mode .tab-content {
+  filter: none !important;
+}
+
+/* Ne pas flouter la search bar */
+.search-mode .search-banner {
+  filter: none !important;
+  z-index: 1000 !important;
+}
+
+/* Overlay de fond — DOIT ÊTRE SOUS LA BARRE */
+.search-overlay {
+  position: fixed;
+  inset: 0;
+  display: none !important;
+  background: transparent;
+  z-index: 1 !important; /* en dessous de tout */
+  pointer-events: none !important;     /* n’intercepte jamais */
+}
+.search-mode .search-overlay {
+  display: block !important;
+}
+
+/* Quand la recherche est active, barre en haut (iOS OK) */
+.search-banner.search-bar-top {
+  position: fixed !important;
+  top: 60px !important;
+  bottom: auto !important;
+  border-bottom: 1px solid var(--border);
+  border-top: none;
+  z-index: 1000 !important; /* au-dessus de l’overlay */
+}

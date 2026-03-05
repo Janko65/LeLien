@@ -1,24 +1,23 @@
 // ======================
 // DONNÉES DE BASE & ÉTAT
 // ======================
-
 const codesValides = {
   "CADRE1": { nom: "Jean Dupont", métier: "métier1", role: "user" },
-  "TECH1": { nom: "Marie Martin", métier: "métier2", role: "user" },
-  "DIR1": { nom: "Directeur Dupuis", métier: "métier3", role: "user" },
+  "TECH1":  { nom: "Marie Martin", métier: "métier2", role: "user" },
+  "DIR1":   { nom: "Directeur Dupuis", métier: "métier3", role: "user" },
   "ADMIN0": { nom: "Admin", métier: "admin", role: "admin" }
 };
 
 const metiers = {
-  métier1: { label: "Cadres", color: "var(--métier1-color)" },
+  métier1: { label: "Cadres",      color: "var(--métier1-color)" },
   métier2: { label: "Techniciens", color: "var(--métier2-color)" },
-  métier3: { label: "Dirigeants", color: "var(--métier3-color)" },
-  admin: { label: "Admin", color: "var(--admin-color)" }
+  métier3: { label: "Dirigeants",  color: "var(--métier3-color)" },
+  admin:   { label: "Admin",       color: "var(--admin-color)" }
 };
 
 // Catégories dynamiques
 let categories = JSON.parse(localStorage.getItem("categories")) || {
-  catégorie1: { label: "Planning", icon: "", color: "#FF9800" },
+  catégorie1: { label: "Planning",  icon: "", color: "#FF9800" },
   catégorie2: { label: "Entretien", icon: "", color: "#00BCD4" },
 };
 
@@ -32,7 +31,6 @@ let editingId = null;
 // ======================
 // UTILS
 // ======================
-
 function formatDate(dateString) {
   if (!dateString) return "—";
   return new Date(dateString).toLocaleDateString("fr-FR");
@@ -44,79 +42,57 @@ function getUserProblematiques() {
 }
 
 function updateUI() {
-
   if (!currentUser) return;
-
   document.getElementById("userName").textContent = currentUser.nom;
-
   const userProblematiques = getUserProblematiques();
-
   document.getElementById("userStatus").textContent =
     `${userProblematiques.length} événement${userProblematiques.length > 1 ? "s" : ""}`;
-
   renderProblematiques();
 }
 
 // ======================
 // GESTION UTILISATEUR
 // ======================
-
 function setUser(user) {
-
   currentUser = user;
 
-  const authScreen = document.getElementById("authScreen");
-  const mainScreen = document.getElementById("mainScreen");
-  const bottomBar = document.getElementById("bottomBar");
-  const searchBanner = document.getElementById("searchBanner");
+  const authScreen  = document.getElementById("authScreen");
+  const mainScreen  = document.getElementById("mainScreen");
+  const bottomBar   = document.getElementById("bottomBar");
+  const searchBanner= document.getElementById("searchBanner");
 
   if (user) {
-
     localStorage.setItem("user", JSON.stringify(user));
-
-    if (authScreen) authScreen.style.display = "none";
-    if (mainScreen) mainScreen.style.display = "block";
-    if (bottomBar) bottomBar.style.display = "flex";
-    if (searchBanner) searchBanner.style.display = "flex";
-
+    if (authScreen)  authScreen.style.display  = "none";
+    if (mainScreen)  mainScreen.style.display  = "block";
+    if (bottomBar)   bottomBar.style.display   = "flex";
+    if (searchBanner)searchBanner.style.display= "flex";
     updateUI();
     showTab(currentTab);
-
   } else {
-
     localStorage.removeItem("user");
-
-    if (authScreen) authScreen.style.display = "flex";
-    if (mainScreen) mainScreen.style.display = "none";
-    if (bottomBar) bottomBar.style.display = "none";
-    if (searchBanner) searchBanner.style.display = "none";
-
+    if (authScreen)  authScreen.style.display  = "flex";
+    if (mainScreen)  mainScreen.style.display  = "none";
+    if (bottomBar)   bottomBar.style.display   = "none";
+    if (searchBanner)searchBanner.style.display= "none";
   }
 }
+
 // ======================
 // MODALES
 // ======================
-
-function showModal(id) {
-  document.getElementById(id).style.display = "flex";
-}
-
-function hideModal(id) {
-  document.getElementById(id).style.display = "none";
-}
+function showModal(id) { document.getElementById(id).style.display = "flex"; }
+function hideModal(id) { document.getElementById(id).style.display = "none"; }
 
 function setupModalClose() {
   document.querySelectorAll(".modal").forEach(modal => {
-    modal.addEventListener("click", e => {
-      if (e.target === modal) hideModal(modal.id);
-    });
+    modal.addEventListener("click", e => { if (e.target === modal) hideModal(modal.id); });
   });
 }
 
 // ======================
 // CRUD PROBLÉMATIQUES
 // ======================
-
 function showProblematiqueModal() {
   editingId = null;
   document.getElementById("modalTitle").textContent = "Nouvelle problématique";
@@ -130,7 +106,7 @@ function showProblematiqueModal() {
   dateInput.value = today;
   dateInput.min = today;
 
-  document.getElementById("saveProblematiqueBtn").style.display = "block";
+  document.getElementById("saveProblematiqueBtn").style.display   = "block";
   document.getElementById("deleteProblematiqueBtn").style.display = "none";
 
   updateCategorieSelect();
@@ -140,33 +116,35 @@ function showProblematiqueModal() {
 function openProblematique(id) {
   const p = problematiques.find(p => p.id === id);
   if (!p) return;
+
   editingId = id;
 
   document.getElementById("modalTitle").textContent = "Consulter la problématique";
-  document.getElementById("problematiqueTitre").value = p.titre;
-  document.getElementById("problematiqueDescription").value = p.description;
-  document.getElementById("problematiqueCategorie").value = p.categorie;
-  document.getElementById("problematiqueDiffusion").value = p.diffusion;
-  document.getElementById("problematiqueDateDeb").value =
+  document.getElementById("problematiqueTitre").value        = p.titre;
+  document.getElementById("problematiqueDescription").value  = p.description;
+  document.getElementById("problematiqueCategorie").value    = p.categorie;
+  document.getElementById("problematiqueDiffusion").value    = p.diffusion;
+  document.getElementById("problematiqueDateDeb").value      =
     new Date(p.dateDeb).toISOString().split("T")[0];
 
   const canEdit = currentUser.role === "admin" || p.métier === currentUser.métier;
-
-  ["problematiqueTitre", "problematiqueDescription", "problematiqueCategorie", "problematiqueDiffusion", "problematiqueDateDeb"]
+  ["problematiqueTitre","problematiqueDescription","problematiqueCategorie",
+   "problematiqueDiffusion","problematiqueDateDeb"]
     .forEach(id => document.getElementById(id).disabled = !canEdit);
 
-  document.getElementById("saveProblematiqueBtn").style.display = canEdit ? "block" : "none";
+  document.getElementById("saveProblematiqueBtn").style.display   = canEdit ? "block" : "none";
   document.getElementById("deleteProblematiqueBtn").style.display = canEdit ? "block" : "none";
 
   showModal("problematiqueModal");
 }
 
 function saveProblematique() {
-  const titre = document.getElementById("problematiqueTitre").value.trim();
+  const titre       = document.getElementById("problematiqueTitre").value.trim();
   const description = document.getElementById("problematiqueDescription").value.trim();
-  const categorie = document.getElementById("problematiqueCategorie").value;
-  const diffusion = document.getElementById("problematiqueDiffusion").value;
-  const dateDeb = document.getElementById("problematiqueDateDeb").value;
+  const categorie   = document.getElementById("problematiqueCategorie").value;
+  const diffusion   = document.getElementById("problematiqueDiffusion").value;
+  const dateDeb     = document.getElementById("problematiqueDateDeb").value;
+
   const métier = editingId
     ? problematiques.find(p => p.id === editingId).métier
     : currentUser.métier;
@@ -175,7 +153,6 @@ function saveProblematique() {
     alert("Titre et description requis !");
     return;
   }
-
   if (!categorie) {
     alert("Veuillez sélectionner une catégorie !");
     return;
@@ -204,10 +181,7 @@ function deleteProblematique() {
   updateUI();
 }
 
-function cancelProblematique() {
-  hideModal("problematiqueModal");
-}
-
+function cancelProblematique() { hideModal("problematiqueModal"); }
 
 function searchProblematiques() {
   const query = document.getElementById("searchInput").value.toLowerCase();
@@ -227,10 +201,10 @@ function searchProblematiques() {
   if (currentTab === "byMetier") renderByMetier(filtered);
   else if (currentTab === "byProblematique") renderByProblematique(filtered);
 }
+
 // ======================
 // CRUD CATÉGORIES
 // ======================
-
 function handleCategorieClick() {
   if (currentUser.role !== "admin") {
     alert("Accès réservé à l'administrateur.");
@@ -239,15 +213,14 @@ function handleCategorieClick() {
   showCategorieChoiceModal();
 }
 
-function showCategorieChoiceModal() {
-  showModal("categorieChoiceModal");
-}
+function showCategorieChoiceModal() { showModal("categorieChoiceModal"); }
 
 function showCategorieModal(mode, id = null) {
   hideModal("categorieChoiceModal");
   hideModal("categorieListModal");
 
   const modalTitle = document.getElementById("categorieModalTitle");
+
   if (mode === "add") {
     modalTitle.textContent = "Nouvelle catégorie";
     document.getElementById("categorieNom").value = "";
@@ -260,40 +233,36 @@ function showCategorieModal(mode, id = null) {
     document.getElementById("categorieCouleur").value = categorie.color;
     editingCategorieId = id;
   }
+
   showModal("categorieModal");
 }
 
 function saveCategorie() {
   const nom = document.getElementById("categorieNom").value.trim();
   const couleur = document.getElementById("categorieCouleur").value;
+
   if (!nom) {
     alert("Le nom est requis !");
     return;
   }
 
   const id = editingCategorieId || nom.toLowerCase().replace(/\s+/g, "-");
+
   if (!editingCategorieId && categories[id]) {
     alert("Une catégorie avec ce nom existe déjà !");
     return;
   }
 
-  categories[id] = {
-    label: nom,
-    icon: "❓",
-    color: couleur
-  };
+  categories[id] = { label: nom, icon: "❓", color: couleur };
 
   if (editingCategorieId && editingCategorieId !== id) {
-    problematiques.forEach(p => {
-      if (p.categorie === editingCategorieId) {
-        p.categorie = id;
-      }
-    });
+    problematiques.forEach(p => { if (p.categorie === editingCategorieId) p.categorie = id; });
     delete categories[editingCategorieId];
   }
 
   localStorage.setItem("categories", JSON.stringify(categories));
   localStorage.setItem("problematiques", JSON.stringify(problematiques));
+
   hideModal("categorieModal");
   updateCategorieSelect();
   renderProblematiques();
@@ -302,8 +271,8 @@ function saveCategorie() {
 function updateCategorieSelect() {
   const select = document.getElementById("problematiqueCategorie");
   if (!select) return;
-
   select.innerHTML = "";
+
   const defaultOption = document.createElement("option");
   defaultOption.value = "";
   defaultOption.textContent = "--- Sélectionnez une catégorie ---";
@@ -347,12 +316,18 @@ function showCategorieListModal() {
 function confirmDeleteCategorie(id) {
   const categorie = categories[id];
   const count = problematiques.filter(p => p.categorie === id).length;
+
   if (count > 0) {
-    const confirmMsg = `Cette catégorie contient ${count} problématique(s).\nSupprimer la catégorie supprimera aussi ces problématiques.\nVoulez-vous continuer ?`;
+    const confirmMsg =
+      `Cette catégorie contient ${count} problématique(s).\n` +
+      `Supprimer la catégorie supprimera aussi ces problématiques.\n` +
+      `Voulez-vous continuer ?`;
     if (!confirm(confirmMsg)) return;
+
     problematiques = problematiques.filter(p => p.categorie !== id);
     localStorage.setItem("problematiques", JSON.stringify(problematiques));
   }
+
   delete categories[id];
   localStorage.setItem("categories", JSON.stringify(categories));
   updateCategorieSelect();
@@ -363,24 +338,23 @@ function confirmDeleteCategorie(id) {
 // ======================
 // AFFICHAGE PAR MÉTIER / CATÉGORIE + TOGGLE
 // ======================
-
 let expandState = 0; // 0 = tout replié, 1 = en-têtes ouverts, 2 = descriptions visibles
 
 function toggleExpandCollapse() {
   const btn = document.getElementById("expandCollapseBtn");
   expandState = (expandState + 1) % 3; // Cycle : 0 → 1 → 2 → 0
 
-  // Gestion des groupes principaux
+  // Groupes
   document.querySelectorAll(".group-content").forEach(el => {
     el.classList.toggle("open", expandState >= 1);
   });
 
-  // Gestion des prévisualisations
+  // Prévisualisations
   document.querySelectorAll(".problematique-preview").forEach(el => {
     el.style.display = expandState === 2 ? "block" : "none";
   });
 
-  // Mise à jour du texte du bouton
+  // Libellé bouton
   if (expandState === 0) btn.textContent = "Déplier";
   else if (expandState === 1) btn.textContent = "+ Déplier";
   else btn.textContent = "Replier";
@@ -402,6 +376,7 @@ function renderByMetier(problematiques) {
   Object.keys(grouped).forEach(key => {
     const data = grouped[key];
     const metier = metiers[key];
+
     const card = document.createElement("div");
     card.className = "group-card";
     card.style.borderLeftColor = metier.color;
@@ -414,19 +389,18 @@ function renderByMetier(problematiques) {
         ${data.map(p => {
           const canEdit = currentUser.role === "admin" || p.métier === currentUser.métier;
           return `
-          <div class="problematique-item" onclick="togglePreview('metier-${p.id}')" style="border-right:4px solid ${categories[p.categorie].color}">
-            <div class="item-header">
-              <span class="item-date">${formatDate(p.dateDeb)}</span>
-              <strong class="item-title">${p.titre}</strong>
-              <span class="item-context">${categories[p.categorie].label}</span>
+            <div class="problematique-item" onclick="togglePreview('metier-${p.id}')" style="border-right:4px solid ${categories[p.categorie].color}">
+              <div class="item-header">
+                <span class="item-date">${formatDate(p.dateDeb)}</span>
+                <strong class="item-title">${p.titre}</strong>
+                <span class="item-context">${categories[p.categorie].label}</span>
+              </div>
             </div>
-          </div>
-          <div class="problematique-preview" id="preview-metier-${p.id}" style="display:none;border:3px solid ${categories[p.categorie].color}"
-               ${canEdit ? `onclick="openProblematique('${p.id}')"` : ""}>
-            <div class="preview-content">
-              <p>${p.description}</p>
+            <div class="problematique-preview" id="preview-metier-${p.id}" style="display:none;border:3px solid ${categories[p.categorie].color}" ${canEdit ? `onclick="openProblematique('${p.id}')"` : ""}>
+              <div class="preview-content">
+                <p>${p.description}</p>
+              </div>
             </div>
-          </div>
           `;
         }).join("")}
       </div>
@@ -451,6 +425,7 @@ function renderByProblematique(problematiques) {
   Object.keys(grouped).forEach(key => {
     const data = grouped[key];
     const categorie = categories[key];
+
     const card = document.createElement("div");
     card.className = "group-card";
     card.style.borderLeftColor = categorie.color;
@@ -463,19 +438,18 @@ function renderByProblematique(problematiques) {
         ${data.map(p => {
           const canEdit = currentUser.role === "admin" || p.métier === currentUser.métier;
           return `
-          <div class="problematique-item" onclick="togglePreview('categorie-${p.id}')" style="border-right:4px solid ${metiers[p.métier].color}">
-            <div class="item-header">
-              <span class="item-date">${formatDate(p.dateDeb)}</span>
-              <strong class="item-title">${p.titre}</strong>
-              <span class="item-context">${metiers[p.métier].label}</span>
+            <div class="problematique-item" onclick="togglePreview('categorie-${p.id}')" style="border-right:4px solid ${metiers[p.métier].color}">
+              <div class="item-header">
+                <span class="item-date">${formatDate(p.dateDeb)}</span>
+                <strong class="item-title">${p.titre}</strong>
+                <span class="item-context">${metiers[p.métier].label}</span>
+              </div>
             </div>
-          </div>
-          <div class="problematique-preview" id="preview-categorie-${p.id}" style="display:none;border:3px solid ${metiers[p.métier].color}"
-               ${canEdit ? `onclick="openProblematique('${p.id}')"` : ""}>
-            <div class="preview-content">
-              <p>${p.description}</p>
+            <div class="problematique-preview" id="preview-categorie-${p.id}" style="display:none;border:3px solid ${metiers[p.métier].color}" ${canEdit ? `onclick="openProblematique('${p.id}')"` : ""}>
+              <div class="preview-content">
+                <p>${p.description}</p>
+              </div>
             </div>
-          </div>
           `;
         }).join("")}
       </div>
@@ -487,7 +461,6 @@ function renderByProblematique(problematiques) {
 // ======================
 // FONCTION DE LIAISON
 // ======================
-
 function renderProblematiques() {
   const userProblematiques = getUserProblematiques();
   if (currentTab === "byMetier") renderByMetier(userProblematiques);
@@ -497,7 +470,6 @@ function renderProblematiques() {
 // ======================
 // TOGGLE
 // ======================
-
 function togglePreview(typeId) {
   const preview = document.getElementById(`preview-${typeId}`);
   if (!preview) return;
@@ -510,57 +482,106 @@ function toggleGroup(id) {
   el.classList.toggle("open");
 }
 
-
-
 // ======================
 // INITIALISATION, SPLASH, AUTH, THÈME, ONGLETS
 // ======================
-
 document.addEventListener("DOMContentLoaded", () => {
   setupModalClose();
   applyTheme();
   updateCategorieSelect();
 
-  const authScreen = document.getElementById("authScreen");
-  const mainScreen = document.getElementById("mainScreen");
-  const bottomBar = document.getElementById("bottomBar");
-  const splash = document.getElementById("splashScreen");
-  const searchBanner = document.getElementById("searchBanner"); // Utilise getElementById
+  const authScreen   = document.getElementById("authScreen");
+  const mainScreen   = document.getElementById("mainScreen");
+  const bottomBar    = document.getElementById("bottomBar");
+  const splash       = document.getElementById("splashScreen");
+  const searchBanner = document.getElementById("searchBanner");
+  const searchInput  = document.getElementById("searchInput");
+  const searchOverlay= document.getElementById("searchOverlay"); // overlay neutralisé
 
   // Masque tout au démarrage
-  if (authScreen) authScreen.style.display = "none";
-  if (mainScreen) mainScreen.style.display = "none";
-  if (bottomBar) bottomBar.style.display = "none";
-  if (searchBanner) searchBanner.style.display = "none";
-  if (splash) splash.style.display = "block";
+  if (authScreen)  authScreen.style.display  = "none";
+  if (mainScreen)  mainScreen.style.display  = "none";
+  if (bottomBar)   bottomBar.style.display   = "none";
+  if (searchBanner)searchBanner.style.display= "none";
+  if (splash)      splash.style.display      = "block";
 
-  // Après 1s, vérifie l'utilisateur connecté
+  // Splash + login auto
   setTimeout(() => {
     if (splash) splash.style.display = "none";
     const user = localStorage.getItem("user");
-
-if (user) {
-  setUser(JSON.parse(user));
-} else {
-  setUser(null);
-}
+    if (user) setUser(JSON.parse(user));
+    else setUser(null);
   }, 1000);
+
+  // ============================
+  // 🔍 MODE RECHERCHE
+  // ============================
+  let isSearchMode = false;
+
+  // ---- Entrée en mode recherche ----
+  function enterSearchMode() {
+    if (isSearchMode) return;
+    isSearchMode = true;
+    document.body.classList.add("search-mode");
+    searchBanner.classList.add("search-bar-top");
+    // Overlay totalement désactivé
+    if (searchOverlay) searchOverlay.style.display = "none";
+  }
+
+  // ---- Sortie du mode recherche ----
+  function exitSearchMode() {
+    if (!isSearchMode) return;
+    isSearchMode = false;
+    document.body.classList.remove("search-mode");
+    searchBanner.classList.remove("search-bar-top");
+    // Ne vide PAS la recherche
+    searchInput.blur();
+    // Refiltre selon le texte restant
+    searchProblematiques();
+  }
+
+  // Focus sur la barre → mode recherche ON
+  if (searchInput) searchInput.addEventListener("focus", enterSearchMode);
+  // Saisie → filtrage en direct
+  if (searchInput) searchInput.addEventListener("input", searchProblematiques);
+
+  // --- Durcissement interactions barre de recherche ---
+  if (searchBanner) {
+    // Évite que le clic à l'intérieur ferme le mode recherche
+    searchBanner.addEventListener('click', (e) => { e.stopPropagation(); }, true);
+    searchBanner.addEventListener('touchstart', (e) => { e.stopPropagation(); }, {passive:true});
+  }
+  if (searchInput) {
+    // Forcer le focus sur iOS/Android au toucher
+    searchInput.addEventListener('touchend', () => {
+      if (document.activeElement !== searchInput) { searchInput.focus(); enterSearchMode(); }
+    }, {passive:true});
+  }
+
+  // ---- Clic hors barre → quitter SANS vider ----
+  document.addEventListener("click", (e) => {
+    if (!isSearchMode) return;
+    // Si on clique DANS la barre → ne rien faire
+    if (e.target.closest("#searchBanner")) return;
+    // Sinon on sort du mode recherche, texte conservé
+    exitSearchMode();
+  });
+
+  // Repli clavier (mobile)
+  window.addEventListener("resize", () => {
+    if (!isSearchMode) return;
+    // Si on n'est plus en train d’écrire → quitter
+    if (document.activeElement !== searchInput) { exitSearchMode(); }
+  });
 });
 
 // ======================
 // AUTHENTIFICATION
 // ======================
-
 function authenticate() {
-
   const code = document.getElementById("userCode").value.trim();
-
-  if (codesValides[code]) {
-    setUser(codesValides[code]);
-  } else {
-    alert("Code invalide !");
-  }
-
+  if (codesValides[code]) { setUser(codesValides[code]); }
+  else { alert("Code invalide !"); }
 }
 
 // ======================
@@ -569,63 +590,58 @@ function authenticate() {
 function logout() {
   hideModal("moreModal");
   setUser(null);
-
   if (document.getElementById("userCode"))
     document.getElementById("userCode").value = "";
 }
 
 function resetData() {
- if (!confirm("Êtes-vous sûr de vouloir réinitialiser TOUTES les données ? Cette action est irréversible.")) return;
- // Supprime toutes les données du localStorage
- localStorage.clear();
- // Réinitialise les variables en mémoire
- problematiques = [];
- categories = {
-   catégorie1: { label: "Planning", icon: "", color: "#FF9800" },
-   catégorie2: { label: "Entretien", icon: "", color: "#00BCD4" },
- };
- currentUser = null;
- currentTheme = "dark";
- // Redirige vers l'écran de connexion
- if (document.getElementById("authScreen")) document.getElementById("authScreen").style.display = "flex";
- if (document.getElementById("mainScreen")) document.getElementById("mainScreen").style.display = "none";
- if (document.getElementById("bottomBar")) document.getElementById("bottomBar").style.display = "none";
- // Met à jour l'UI
- updateUI();
- hideModal("moreModal");
+  if (!confirm("Êtes-vous sûr de vouloir réinitialiser TOUTES les données ? Cette action est irréversible.")) return;
+
+  localStorage.clear();
+
+  problematiques = [];
+  categories = {
+    catégorie1: { label: "Planning",  icon: "", color: "#FF9800" },
+    catégorie2: { label: "Entretien", icon: "", color: "#00BCD4" },
+  };
+  currentUser = null;
+  currentTheme = "dark";
+
+  if (document.getElementById("authScreen")) document.getElementById("authScreen").style.display = "flex";
+  if (document.getElementById("mainScreen")) document.getElementById("mainScreen").style.display = "none";
+  if (document.getElementById("bottomBar"))  document.getElementById("bottomBar").style.display  = "none";
+
+  updateUI();
+  hideModal("moreModal");
 }
 
 // ======================
 // THÈME
 // ======================
-
 function toggleTheme() {
   currentTheme = currentTheme === "dark" ? "light" : "dark";
   localStorage.setItem("theme", currentTheme);
   applyTheme();
 }
-
-function applyTheme() {
-  document.documentElement.setAttribute("data-theme", currentTheme);
-}
+function applyTheme() { document.documentElement.setAttribute("data-theme", currentTheme); }
 
 // ======================
 // ONGLET
 // ======================
-
 function showTab(tabId) {
   document.querySelectorAll(".tab-content").forEach(el => el.style.display = "none");
   document.querySelectorAll(".tab-btn").forEach(btn => btn.classList.remove("active"));
+
   const tab = document.getElementById(tabId);
   if (tab) tab.style.display = "block";
+
   const btn = document.querySelector(`[onclick="showTab('${tabId}')"]`);
   if (btn) btn.classList.add("active");
+
   currentTab = tabId;
-  // Réinitialise la recherche et rend les problématiques
+
   document.getElementById("searchInput").value = "";
   renderProblematiques();
 }
 
-function showMoreModal() {
-  showModal("moreModal");
-}
+function showMoreModal() { showModal("moreModal"); }
