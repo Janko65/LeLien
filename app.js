@@ -567,7 +567,7 @@ function exitSearchMode() {
     searchBanner.classList.remove("search-bar-top");
     searchOverlay.style.display = "none";
     searchInput.blur();
-    searchInput.value = "";
+    // searchInput.value = "";  // ❌ on ne vide plus
     renderProblematiques();
 }
 
