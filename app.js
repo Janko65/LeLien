@@ -545,6 +545,55 @@ if (user) {
   setUser(null);
 }
   }, 1000);
+
+  let isSearchMode = false;
+const searchInput = document.getElementById("searchInput");
+const searchOverlay = document.getElementById("searchOverlay");
+
+/* ---- Entrée en mode recherche ---- */
+function enterSearchMode() {
+    if (isSearchMode) return;
+
+    isSearchMode = true;
+    document.body.classList.add("search-mode");
+    searchBanner.classList.add("search-bar-top");
+    searchOverlay.style.display = "block";
+}
+
+/* ---- Sortie du mode recherche ---- */
+function exitSearchMode() {
+    isSearchMode = false;
+    document.body.classList.remove("search-mode");
+    searchBanner.classList.remove("search-bar-top");
+    searchOverlay.style.display = "none";
+    searchInput.blur();
+    searchInput.value = "";
+    renderProblematiques();
+}
+
+/* ---- Détection du focus sur l’input ---- */
+searchInput.addEventListener("focus", enterSearchMode);
+
+/* ---- Si on efface le texte ---- */
+searchInput.addEventListener("input", () => {
+    const q = searchInput.value.trim();
+
+    if (q === "") {
+        renderProblematiques(); // vide les résultats
+    }
+});
+
+/* ---- Clic hors zone → quitter ---- */
+searchOverlay.addEventListener("click", exitSearchMode);
+
+/* ---- Repli du clavier ---- */
+window.addEventListener("resize", () => {
+    // Heuristique : si le clavier se replie, la hauteur remonte
+    if (isSearchMode && searchInput.value.trim() === "") {
+        exitSearchMode();
+    }
+});
+
 });
 
 // ======================
