@@ -351,13 +351,16 @@ select option:disabled {
     display: block;
 }
 /* ==== FIX POUR EMPÊCHER LA BARRE DE S'ÉTIRER ==== */
+
 .search-bar-top {
+  bottom: auto !important;  /* ← ICI : on annule le bottom */
   height: 50px !important;
   padding: 4px 0 !important;
   display: flex;
   align-items: center;
   justify-content: center;
 }
+
 
 /* Rend l'input compact même en haut */
 .search-bar-top input {
