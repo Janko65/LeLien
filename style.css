@@ -350,11 +350,34 @@ select option:disabled { color: var(--muted); }
 
 /* ===================== MODE RECHERCHE ===================== */
 
-.search-mode .screen,
+/* ===================== MODE RECHERCHE ===================== */
+/* On floute uniquement l'UI, JAMAIS le contenu */
 .search-mode .tabs,
 .search-mode .app-header,
 .search-mode .bottom-bar {
   filter: blur(6px);
+}
+
+/* Le contenu RESTE NET pour afficher les résultats */
+.search-mode .screen {
+  filter: none !important;
+}
+
+/* Ne pas flouter la search-bar */
+.search-mode .search-banner {
+  filter: none !important;
+}
+
+/* Overlay */
+.search-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  z-index: 998;
+  display: none;
+}
+.search-mode .search-overlay {
+  display: block;
 }
 
 /* Ne pas flouter la search bar */
