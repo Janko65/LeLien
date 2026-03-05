@@ -381,11 +381,12 @@ display: none !important;
     display: block;
 }
 
-/* Quand la barre passe en haut */
+/* Quand la recherche est active, barre en haut (compatible iOS) */
 .search-banner.search-bar-top {
-  top: 60px;              /* sous le header */
-  bottom: auto;           /* annule le placement en bas */
+  position: fixed !important;
+  top: 60px !important;       /* sous le header */
+  bottom: unset !important;   /* Safari iOS ne comprend pas "auto" */
   border-bottom: 1px solid var(--border);
-  border-top: none;       /* on inverse la bordure pour l’esthétique */
-  z-index: 999;           /* pour passer devant les éléments floutés */
+  border-top: none;
+  z-index: 999 !important;
 }
