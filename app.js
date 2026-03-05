@@ -381,9 +381,9 @@ function toggleExpandCollapse() {
   });
 
   // Mise à jour du texte du bouton
-  if (expandState === 0) btn.textContent = "Tout déplier";
-  else if (expandState === 1) btn.textContent = "Afficher les descriptions";
-  else btn.textContent = "Tout replier";
+  if (expandState === 0) btn.textContent = "Déplier";
+  else if (expandState === 1) btn.textContent = "+ Déplier";
+  else btn.textContent = "Replier";
 }
 
 function renderByMetier(problematiques) {
