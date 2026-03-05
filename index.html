@@ -20,7 +20,7 @@
   <div id="authScreen" class="screen" style="display:none;">
     <div class="auth-container">
       <h2>Connexion</h2>
-      <input type="text" id="userCode" placeholder="Code utilisateur (ex: EDUC123)" autocomplete="off">
+      <input type="text" id="userCode" placeholder="Code utilisateur" autocomplete="off">
       <button class="btn primary" onclick="authenticate()">Se connecter</button>
     </div>
   </div>
@@ -38,8 +38,11 @@
 
     <!-- Onglets -->
     <div class="tabs">
+
+      <button class="tab-btn" onclick="showTab('byProblematique')">Par catégories</button>
+
       <button class="tab-btn active" onclick="showTab('byMetier')">Par métiers</button>
-      <button class="tab-btn" onclick="showTab('byProblematique')">Par thèmes</button>
+
     </div>
 
     <!-- Onglet Métiers -->
@@ -54,14 +57,21 @@
 
   </div>
 
-  <!-- Barre inférieure -->
-  <div class="bottom-bar" id="bottomBar" style="display:none;">
-    <button class="btn primary large" onclick="showProblematiqueModal()">
-      + Ajouter
-    </button>
-<button class="btn secondary" onclick="showCategorieChoiceModal()">Catégorie</button>
-  </div>
 
+  <!-- Barre inférieure -->
+
+
+<div id="searchBanner" class="search-banner" style="display:none;">
+  <input type="text" id="searchInput" placeholder="Rechercher..." oninput="searchProblematiques()">
+</div>
+
+ <div id="bottomBar" class="bottom-bar" style="display:none;">
+  <button id="expandCollapseBtn" class="btn secondary" onclick="toggleExpandCollapse()">
+    Déplier
+  </button>
+  <button class="btn primary" onclick="showProblematiqueModal()">Ajouter</button>
+  <button class="btn secondary" onclick="handleCategorieClick()">Catégorie</button>
+</div>
   <!-- Modale Ajout / Édition -->
   <div id="problematiqueModal" class="modal">
     <div class="modal-content">
@@ -78,9 +88,6 @@
       </div>
 
       <select id="problematiqueCategorie" class="modal-input">
-        <option value="planning">Planning</option>
-        <option value="jeunes">Jeunes</option>
-        <option value="repas">Repas</option>
       </select>
 
       <select id="problematiqueDiffusion" class="modal-input">

@@ -18,14 +18,11 @@
   --space-3: 16px;
   --space-4: 20px;
 
-  --educateur-color: #4285F4;
-  --veilleur-color: #4CAF50;
-  --medecin-color: #F44336;
+  --métier1-color: #4285F4;
+  --métier2-color: #4CAF50;
+  --métier3-color: #F44336;
   --admin-color: #9C27B0;
-
-  --planning-color: #FF9800;
-  --jeunes-color: #00BCD4;
-  --repas-color: #E91E63;
+  
 }
 
 [data-theme="light"] {
@@ -82,7 +79,7 @@ html, body { margin: 0; height: 100%; background: var(--bg); color: var(--text);
   top: 102px; /* header + onglets */
   left: 0;
   right: 0;
-  bottom: 60px; /* bottom-bar */
+  bottom: 120px; /* 60px (bottom-bar) + 60px (search-banner) */
   overflow-y: auto;
   padding: var(--space-3);
 }
@@ -136,6 +133,7 @@ html, body { margin: 0; height: 100%; background: var(--bg); color: var(--text);
   margin: 0;
   border-radius: var(--radius-sm) 0 var(--radius-sm) var(--radius-sm);
   border: 3px solid transparent;
+display: none;
 }
 .preview-content p {
   font-size: 14px;
@@ -297,3 +295,29 @@ select option:disabled {
   border-radius: 50%;
   margin-right: var(--space-2);
 }
+/* ===================== SEARCH & EXPAND/COLLAPSE BANNERS ===================== */
+/* ===================== SEARCH BANNER ===================== */
+.search-banner {
+  background: var(--panel);
+  border-top: 1px solid var(--border);
+  padding: var(--space-2);
+  position: fixed;
+  bottom: 60px; /* Juste au-dessus de la bottom-bar */
+  left: 0;
+  right: 0;
+  z-index: 99;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.search-banner input {
+  width: 90%;
+  height: 40px;
+  padding: 0 var(--space-2);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--panel-alt);
+  color: var(--text);
+}
+
