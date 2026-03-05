@@ -9,11 +9,8 @@
 <body>
 
   <!-- Splash Screen -->
-  <div id="splashScreen">
-    <div class="splash-content">
-      <h1>LeLien</h1>
-      <p>Gestion collaborative</p>
-    </div>
+  <div id="splashScreen" class="splash">
+    <img src="logo.png" alt="Logo" class="splash-logo">
   </div>
 
   <!-- Écran Connexion -->
@@ -29,8 +26,9 @@
   <div id="mainScreen" class="screen" style="display:none;">
 
     <header class="app-header">
+      <img src="icone.png" alt="Icône" class="header-icon">
       <div class="user-greeting">
-        <span class="user-name">Bonjour, <span id="userName"></span></span>
+        <span class="user-name"><span id="userName"></span></span>
         <span class="user-status" id="userStatus"></span>
       </div>
       <button class="btn secondary menu-btn" onclick="showMoreModal()">⋮</button>
@@ -38,11 +36,8 @@
 
     <!-- Onglets -->
     <div class="tabs">
-
       <button class="tab-btn" onclick="showTab('byProblematique')">Par catégories</button>
-
       <button class="tab-btn active" onclick="showTab('byMetier')">Par métiers</button>
-
     </div>
 
     <!-- Onglet Métiers -->
@@ -57,29 +52,24 @@
 
   </div>
 
+  <!-- Search banner -->
+  <div id="searchBanner" class="search-banner" style="display:none;">
+    <input type="text" id="searchInput" placeholder="Rechercher..." oninput="searchProblematiques()">
+  </div>
 
   <!-- Barre inférieure -->
+  <div id="bottomBar" class="bottom-bar" style="display:none;">
+    <button id="expandCollapseBtn" class="btn secondary" onclick="toggleExpandCollapse()">Déplier</button>
+    <button class="btn primary" onclick="showProblematiqueModal()">Ajouter</button>
+    <button class="btn secondary" onclick="handleCategorieClick()">Catégorie</button>
+  </div>
 
-
-<div id="searchBanner" class="search-banner" style="display:none;">
-  <input type="text" id="searchInput" placeholder="Rechercher..." oninput="searchProblematiques()">
-</div>
-
- <div id="bottomBar" class="bottom-bar" style="display:none;">
-  <button id="expandCollapseBtn" class="btn secondary" onclick="toggleExpandCollapse()">
-    Déplier
-  </button>
-  <button class="btn primary" onclick="showProblematiqueModal()">Ajouter</button>
-  <button class="btn secondary" onclick="handleCategorieClick()">Catégorie</button>
-</div>
   <!-- Modale Ajout / Édition -->
   <div id="problematiqueModal" class="modal">
     <div class="modal-content">
-
       <h3 id="modalTitle">Nouvelle problématique</h3>
 
       <input type="text" id="problematiqueTitre" placeholder="Titre" class="modal-input">
-
       <textarea id="problematiqueDescription" placeholder="Description…" class="modal-textarea"></textarea>
 
       <div class="date-picker">
@@ -87,8 +77,7 @@
         <input type="date" id="problematiqueDateDeb" class="modal-input">
       </div>
 
-      <select id="problematiqueCategorie" class="modal-input">
-      </select>
+      <select id="problematiqueCategorie" class="modal-input"></select>
 
       <select id="problematiqueDiffusion" class="modal-input">
         <option value="all">À tous les métiers</option>
@@ -103,64 +92,54 @@
     </div>
   </div>
 
-<div id="categorieModal" class="modal">
-  <div class="modal-content">
-    <h3 id="categorieModalTitle">Nouvelle catégorie</h3>
-    <input type="text" id="categorieNom" class="modal-input" placeholder="Nom de la catégorie" autocomplete="off">
-    <div class="color-picker">
-      <label for="categorieCouleur">Couleur :</label>
-      <input type="color" id="categorieCouleur" value="#FF9800">
-    </div>
-    <div class="modal-actions">
-      <button class="btn primary" onclick="saveCategorie()">Enregistrer</button>
-      <button class="btn secondary" onclick="hideModal('categorieModal')">Annuler</button>
+  <!-- Modale Catégorie -->
+  <div id="categorieModal" class="modal">
+    <div class="modal-content">
+      <h3 id="categorieModalTitle">Nouvelle catégorie</h3>
+      <input type="text" id="categorieNom" class="modal-input" placeholder="Nom de la catégorie" autocomplete="off">
+      <div class="color-picker">
+        <label for="categorieCouleur">Couleur :</label>
+        <input type="color" id="categorieCouleur" value="#FF9800">
+      </div>
+      <div class="modal-actions">
+        <button class="btn primary" onclick="saveCategorie()">Enregistrer</button>
+        <button class="btn secondary" onclick="hideModal('categorieModal')">Annuler</button>
+      </div>
     </div>
   </div>
-</div>
 
-<div id="categorieChoiceModal" class="modal">
-  <div class="modal-content">
-    <h3>Gérer les catégories</h3>
-    <div class="modal-actions">
-      <button class="btn primary" onclick="showCategorieModal('add')">Ajouter</button>
-      <button class="btn secondary" onclick="showCategorieListModal()">Modifier</button>
+  <div id="categorieChoiceModal" class="modal">
+    <div class="modal-content">
+      <h3>Gérer les catégories</h3>
+      <div class="modal-actions">
+        <button class="btn primary" onclick="showCategorieModal('add')">Ajouter</button>
+        <button class="btn secondary" onclick="showCategorieListModal()">Modifier</button>
+      </div>
     </div>
   </div>
-</div>
 
-<div id="categorieListModal" class="modal">
-  <div class="modal-content">
-    <h3>Liste des catégories</h3>
-    <div id="categorieListContainer" class="categorie-list"></div>
-    <div class="modal-actions">
-      <button class="btn secondary" onclick="hideModal('categorieListModal')">Fermer</button>
+  <div id="categorieListModal" class="modal">
+    <div class="modal-content">
+      <h3>Liste des catégories</h3>
+      <div id="categorieListContainer" class="categorie-list"></div>
+      <div class="modal-actions">
+        <button class="btn secondary" onclick="hideModal('categorieListModal')">Fermer</button>
+      </div>
     </div>
   </div>
-</div>
 
   <!-- Modale Options -->
   <div id="moreModal" class="modal">
     <div class="modal-content">
-
       <h3>Options</h3>
-
-      <button class="btn secondary full" onclick="toggleTheme()">
-        Thème sombre / clair
-      </button>
-
-      <button class="btn secondary full" onclick="logout()">
-        Déconnexion
-      </button>
-
-      <button class="btn danger full" onclick="resetData()">
-        Réinitialiser les données
-      </button>
+      <button class="btn secondary full" onclick="toggleTheme()">Thème sombre / clair</button>
+      <button class="btn secondary full" onclick="logout()">Déconnexion</button>
+      <button class="btn danger full" onclick="resetData()">Réinitialiser les données</button>
     </div>
   </div>
 
+  <div id="searchOverlay" class="search-overlay"></div>
   <script src="app.js"></script>
 
-<div id="searchOverlay" class="search-overlay"></div>
-  
 </body>
 </html>

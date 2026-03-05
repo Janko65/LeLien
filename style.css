@@ -42,13 +42,12 @@ html, body {
   background: var(--bg);
   color: var(--text);
   font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-  overflow: hidden;
+  overflow: hidden; /* ✅ COMME TON INITIAL */
 }
 
 /* ===================== HEADER ===================== */
 .app-header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
   padding: 0 var(--space-3);
   height: 60px;
@@ -60,9 +59,29 @@ html, body {
   right: 0;
   z-index: 100;
 }
-.app-header .user-greeting { display: flex; flex-direction: column; justify-content: center; gap: 2px; }
-.app-header .user-name { font-size: 16px; font-weight: 600; margin: 0; }
-.app-header .user-status { font-size: 12px; color: var(--muted); margin: 0; }
+
+.app-header .user-greeting {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  gap: 2px;
+}
+
+.app-header .user-name {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.app-header .user-status {
+  font-size: 12px;
+  color: var(--muted);
+  margin: 0;
+}
+
 .app-header .menu-btn {
   height: 36px;
   width: 36px;
@@ -392,5 +411,39 @@ select option:disabled { color: var(--muted); }
   bottom: auto !important;
   border-bottom: 1px solid var(--border);
   border-top: none;
-  z-index: 1000 !important; /* au-dessus de l’overlay */
+  z-index: 1000 !important;
+}
+/* Style pour l'icône dans le bandeau */
+.header-icon {
+  height: 36px;
+  width: 36px;
+  object-fit: contain;
+  margin-right: var(--space-2);
+}
+
+/* Style pour la splash screen */
+.splash {
+  display: flex;
+  justify-content: center;    /* Centre horizontalement */
+  align-items: center;        /* Centre verticalement */
+  height: 100dvh;
+  width: 100vw;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background: var(--bg);
+  z-index: 1000;
+  margin: 0;                  /* Supprime les marges par défaut */
+  padding: 0;                 /* Supprime les espacements internes */
+}
+
+/* Style pour le logo dans la splash screen */
+.splash-logo {
+  max-width: 80%;             /* Limite la largeur à 80% de l'écran */
+  max-height: 80vh;           /* Limite la hauteur à 80% de l'écran */
+  width: auto;                /* Ajuste automatiquement la largeur */
+  height: auto;               /* Ajuste automatiquement la hauteur */
+  object-fit: contain;        /* Garde les proportions du logo */
+  display: block;             /* Évite les espacements indésirables */
+  margin: 0 auto;             /* Centre le logo horizontalement (redondant avec flex, mais utile) */
 }

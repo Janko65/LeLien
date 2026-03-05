@@ -56,10 +56,10 @@ function updateUI() {
 function setUser(user) {
   currentUser = user;
 
-  const authScreen  = document.getElementById("authScreen");
-  const mainScreen  = document.getElementById("mainScreen");
-  const bottomBar   = document.getElementById("bottomBar");
-  const searchBanner= document.getElementById("searchBanner");
+  const authScreen   = document.getElementById("authScreen");
+  const mainScreen   = document.getElementById("mainScreen");
+  const bottomBar    = document.getElementById("bottomBar");
+  const searchBanner = document.getElementById("searchBanner");
 
   if (user) {
     localStorage.setItem("user", JSON.stringify(user));
@@ -184,7 +184,8 @@ function deleteProblematique() {
 function cancelProblematique() { hideModal("problematiqueModal"); }
 
 function searchProblematiques() {
-  const query = document.getElementById("searchInput").value.toLowerCase();
+  const input = document.getElementById("searchInput");
+  const query = (input?.value || "").toLowerCase();
   const userProblematiques = getUserProblematiques();
   let filtered = userProblematiques;
 
@@ -192,8 +193,8 @@ function searchProblematiques() {
     filtered = userProblematiques.filter(p =>
       p.titre.toLowerCase().includes(query) ||
       p.description.toLowerCase().includes(query) ||
-      categories[p.categorie].label.toLowerCase().includes(query) ||
-      metiers[p.métier].label.toLowerCase().includes(query) ||
+      (categories[p.categorie]?.label || "").toLowerCase().includes(query) ||
+      (metiers[p.métier]?.label || "").toLowerCase().includes(query) ||
       formatDate(p.dateDeb).toLowerCase().includes(query)
     );
   }
@@ -298,12 +299,12 @@ function showCategorieListModal() {
     const item = document.createElement("div");
     item.className = "categorie-item";
     item.innerHTML = `
-      <div style="display: flex; align-items: center;">
-        <div class="categorie-color" style="background-color: ${categorie.color}"></div>
+      <div style="display:flex;align-items:center;">
+        <div class="categorie-color" style="background-color:${categorie.color}"></div>
         <span>${categorie.label}</span>
       </div>
       <div class="categorie-actions">
-        <button class="btn secondary" onclick="showCategorieModal('edit', '${id}')">Modifier</button>
+        <button class="btn secondary" onclick="showCategorieModal('edit','${id}')">Modifier</button>
         <button class="btn danger" onclick="confirmDeleteCategorie('${id}')">Supprimer</button>
       </div>
     `;
@@ -314,7 +315,6 @@ function showCategorieListModal() {
 }
 
 function confirmDeleteCategorie(id) {
-  const categorie = categories[id];
   const count = problematiques.filter(p => p.categorie === id).length;
 
   if (count > 0) {
@@ -342,33 +342,30 @@ let expandState = 0; // 0 = tout replié, 1 = en-têtes ouverts, 2 = description
 
 function toggleExpandCollapse() {
   const btn = document.getElementById("expandCollapseBtn");
-  expandState = (expandState + 1) % 3; // Cycle : 0 → 1 → 2 → 0
+  expandState = (expandState + 1) % 3;
 
-  // Groupes
   document.querySelectorAll(".group-content").forEach(el => {
     el.classList.toggle("open", expandState >= 1);
   });
 
-  // Prévisualisations
   document.querySelectorAll(".problematique-preview").forEach(el => {
     el.style.display = expandState === 2 ? "block" : "none";
   });
 
-  // Libellé bouton
   if (expandState === 0) btn.textContent = "Déplier";
   else if (expandState === 1) btn.textContent = "+ Déplier";
   else btn.textContent = "Replier";
 }
 
-function renderByMetier(problematiques) {
+function renderByMetier(list) {
   const container = document.getElementById("metiersList");
   if (!container) return;
   container.innerHTML = "";
 
-  problematiques.sort((a, b) => new Date(b.dateDeb) - new Date(a.dateDeb));
+  list.sort((a, b) => new Date(b.dateDeb) - new Date(a.dateDeb));
 
   const grouped = {};
-  problematiques.forEach(p => {
+  list.forEach(p => {
     if (!grouped[p.métier]) grouped[p.métier] = [];
     grouped[p.métier].push(p);
   });
@@ -397,27 +394,26 @@ function renderByMetier(problematiques) {
               </div>
             </div>
             <div class="problematique-preview" id="preview-metier-${p.id}" style="display:none;border:3px solid ${categories[p.categorie].color}" ${canEdit ? `onclick="openProblematique('${p.id}')"` : ""}>
-              <div class="preview-content">
-                <p>${p.description}</p>
-              </div>
+              <div class="preview-content"><p>${p.description}</p></div>
             </div>
           `;
         }).join("")}
       </div>
     `;
+
     container.appendChild(card);
   });
 }
 
-function renderByProblematique(problematiques) {
+function renderByProblematique(list) {
   const container = document.getElementById("problematiquesGrid");
   if (!container) return;
   container.innerHTML = "";
 
-  problematiques.sort((a, b) => new Date(b.dateDeb) - new Date(a.dateDeb));
+  list.sort((a, b) => new Date(b.dateDeb) - new Date(a.dateDeb));
 
   const grouped = {};
-  problematiques.forEach(p => {
+  list.forEach(p => {
     if (!grouped[p.categorie]) grouped[p.categorie] = [];
     grouped[p.categorie].push(p);
   });
@@ -446,14 +442,13 @@ function renderByProblematique(problematiques) {
               </div>
             </div>
             <div class="problematique-preview" id="preview-categorie-${p.id}" style="display:none;border:3px solid ${metiers[p.métier].color}" ${canEdit ? `onclick="openProblematique('${p.id}')"` : ""}>
-              <div class="preview-content">
-                <p>${p.description}</p>
-              </div>
+              <div class="preview-content"><p>${p.description}</p></div>
             </div>
           `;
         }).join("")}
       </div>
     `;
+
     container.appendChild(card);
   });
 }
@@ -496,16 +491,14 @@ document.addEventListener("DOMContentLoaded", () => {
   const splash       = document.getElementById("splashScreen");
   const searchBanner = document.getElementById("searchBanner");
   const searchInput  = document.getElementById("searchInput");
-  const searchOverlay= document.getElementById("searchOverlay"); // overlay neutralisé
+  const searchOverlay= document.getElementById("searchOverlay");
 
-  // Masque tout au démarrage
   if (authScreen)  authScreen.style.display  = "none";
   if (mainScreen)  mainScreen.style.display  = "none";
   if (bottomBar)   bottomBar.style.display   = "none";
   if (searchBanner)searchBanner.style.display= "none";
   if (splash)      splash.style.display      = "block";
 
-  // Splash + login auto
   setTimeout(() => {
     if (splash) splash.style.display = "none";
     const user = localStorage.getItem("user");
@@ -518,70 +511,69 @@ document.addEventListener("DOMContentLoaded", () => {
   // ============================
   let isSearchMode = false;
 
-  // ---- Entrée en mode recherche ----
   function enterSearchMode() {
     if (isSearchMode) return;
     isSearchMode = true;
     document.body.classList.add("search-mode");
-    searchBanner.classList.add("search-bar-top");
-    // Overlay totalement désactivé
-    if (searchOverlay) searchOverlay.style.display = "none";
+    searchBanner?.classList.add("search-bar-top");
+    if (searchOverlay) searchOverlay.style.display = "none"; // overlay neutralisé
   }
 
-  // ---- Sortie du mode recherche ----
   function exitSearchMode() {
     if (!isSearchMode) return;
     isSearchMode = false;
     document.body.classList.remove("search-mode");
-    searchBanner.classList.remove("search-bar-top");
-    // Ne vide PAS la recherche
-    searchInput.blur();
-    // Refiltre selon le texte restant
+    searchBanner?.classList.remove("search-bar-top");
+    searchInput?.blur();
     searchProblematiques();
   }
 
-  // Focus sur la barre → mode recherche ON
-  if (searchInput) searchInput.addEventListener("focus", enterSearchMode);
-  // Saisie → filtrage en direct
-  if (searchInput) searchInput.addEventListener("input", searchProblematiques);
+  searchInput?.addEventListener("focus", enterSearchMode);
+  searchInput?.addEventListener("input", searchProblematiques);
 
-  // --- Durcissement interactions barre de recherche ---
-  if (searchBanner) {
-    // Évite que le clic à l'intérieur ferme le mode recherche
-    searchBanner.addEventListener('click', (e) => { e.stopPropagation(); }, true);
-    searchBanner.addEventListener('touchstart', (e) => { e.stopPropagation(); }, {passive:true});
-  }
-  if (searchInput) {
-    // Forcer le focus sur iOS/Android au toucher
-    searchInput.addEventListener('touchend', () => {
-      if (document.activeElement !== searchInput) { searchInput.focus(); enterSearchMode(); }
-    }, {passive:true});
-  }
+  searchBanner?.addEventListener("click", (e) => e.stopPropagation(), true);
+  searchBanner?.addEventListener("touchstart", (e) => e.stopPropagation(), { passive: true });
 
-  // ---- Clic hors barre → quitter SANS vider ----
-  document.addEventListener("click", (e) => {
-    if (!isSearchMode) return;
-    // Si on clique DANS la barre → ne rien faire
-    if (e.target.closest("#searchBanner")) return;
-    // Sinon on sort du mode recherche, texte conservé
-    exitSearchMode();
+  searchInput?.addEventListener("touchend", () => {
+    if (document.activeElement !== searchInput) { searchInput.focus(); enterSearchMode(); }
+  }, { passive: true });
+
+  let ignoreOutsideUntil = 0;
+
+if (searchInput) {
+  searchInput.addEventListener("focus", () => {
+    // Pendant l’ouverture du clavier, iOS peut déclencher des events parasites
+    ignoreOutsideUntil = Date.now() + 400; // 0.4s ≈ durée anim clavier
   });
+}
 
-  // Repli clavier (mobile)
-  window.addEventListener("resize", () => {
-    if (!isSearchMode) return;
-    // Si on n'est plus en train d’écrire → quitter
-    if (document.activeElement !== searchInput) { exitSearchMode(); }
-  });
+// Utilise pointerdown (plus fiable mobile) + ignore pendant l’anim
+document.addEventListener("pointerdown", (e) => {
+  if (!isSearchMode) return;
+  if (Date.now() < ignoreOutsideUntil) return; // évite le blur immédiat
+  if (e.target.closest("#searchBanner")) return;
+  exitSearchMode();
+}, true);
+
+let resizeTimer = null;
+
+window.addEventListener("resize", () => {
+  if (!isSearchMode) return;
+
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(() => {
+    // On ne sort du mode recherche QUE si l'input n'est plus focus après l’anim
+    if (document.activeElement !== searchInput) exitSearchMode();
+  }, 250); // attend que le clavier ait fini sa transition
 });
-
+});
 // ======================
 // AUTHENTIFICATION
 // ======================
 function authenticate() {
   const code = document.getElementById("userCode").value.trim();
-  if (codesValides[code]) { setUser(codesValides[code]); }
-  else { alert("Code invalide !"); }
+  if (codesValides[code]) setUser(codesValides[code]);
+  else alert("Code invalide !");
 }
 
 // ======================
@@ -590,8 +582,8 @@ function authenticate() {
 function logout() {
   hideModal("moreModal");
   setUser(null);
-  if (document.getElementById("userCode"))
-    document.getElementById("userCode").value = "";
+  const input = document.getElementById("userCode");
+  if (input) input.value = "";
 }
 
 function resetData() {
@@ -607,9 +599,15 @@ function resetData() {
   currentUser = null;
   currentTheme = "dark";
 
-  if (document.getElementById("authScreen")) document.getElementById("authScreen").style.display = "flex";
-  if (document.getElementById("mainScreen")) document.getElementById("mainScreen").style.display = "none";
-  if (document.getElementById("bottomBar"))  document.getElementById("bottomBar").style.display  = "none";
+  const auth = document.getElementById("authScreen");
+  const main = document.getElementById("mainScreen");
+  const bar  = document.getElementById("bottomBar");
+  const search = document.getElementById("searchBanner");
+
+  if (auth) auth.style.display = "flex";
+  if (main) main.style.display = "none";
+  if (bar)  bar.style.display  = "none";
+  if (search) search.style.display = "none";
 
   updateUI();
   hideModal("moreModal");
@@ -640,7 +638,9 @@ function showTab(tabId) {
 
   currentTab = tabId;
 
-  document.getElementById("searchInput").value = "";
+  const searchInput = document.getElementById("searchInput");
+  if (searchInput) searchInput.value = "";
+
   renderProblematiques();
 }
 
