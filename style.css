@@ -339,6 +339,11 @@ select option:disabled {
     z-index: 999;
 }
 
+/* Ne pas flouter la search bar */
+.search-mode .search-banner {
+    filter: none !important;
+}
+
 .search-overlay {
     position: fixed;
     inset: 0;
@@ -350,10 +355,10 @@ select option:disabled {
 .search-mode .search-overlay {
     display: block;
 }
-/* ==== FIX POUR EMPÊCHER LA BARRE DE S'ÉTIRER ==== */
 
+/* ==== FIX POUR EMPÊCHER LA BARRE DE S'ÉTIRER ==== */
 .search-bar-top {
-  bottom: auto !important;  /* ← ICI : on annule le bottom */
+  bottom: auto !important;
   height: 50px !important;
   padding: 4px 0 !important;
   display: flex;
@@ -361,8 +366,6 @@ select option:disabled {
   justify-content: center;
 }
 
-
-/* Rend l'input compact même en haut */
 .search-bar-top input {
   height: 36px !important;
   width: 100% !important;
