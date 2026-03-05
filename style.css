@@ -282,7 +282,6 @@ input[type="date"] {
   appearance: none;
   -webkit-appearance: none;
 }
-
 html { touch-action: manipulation; }
 
 /* ===================== CATEGORIES ===================== */
@@ -300,9 +299,7 @@ html { touch-action: manipulation; }
   cursor: pointer;
   border-radius: var(--radius-sm);
 }
-
 select option:disabled { color: var(--muted); }
-
 .categorie-list {
   max-height: 300px;
   overflow-y: auto;
@@ -333,10 +330,11 @@ select option:disabled { color: var(--muted); }
   bottom: 60px;
   left: 0;
   right: 0;
-  z-index: 99;
+  z-index: 150 !important;            /* ↑↑ assure le clic */
   display: flex;
   align-items: center;
   justify-content: center;
+  pointer-events: auto;                /* ↑↑ rend cliquable */
 }
 .search-banner input {
   width: 90%;
@@ -346,15 +344,17 @@ select option:disabled { color: var(--muted); }
   border: 1px solid var(--border);
   background: var(--panel-alt);
   color: var(--text);
+  position: relative;                  /* ↑ au-dessus */
+  z-index: 151;
+  pointer-events: auto;
 }
 
 /* ===================== MODE RECHERCHE ===================== */
-
 /* Flouter uniquement l'UI (header, tabs, bottom bar) */
 .search-mode .app-header,
 .search-mode .tabs,
 .search-mode .bottom-bar {
-    filter: blur(6px) !important;
+  filter: blur(6px) !important;
 }
 
 /* Ne PAS flouter le contenu */
@@ -363,35 +363,34 @@ select option:disabled { color: var(--muted); }
 .search-mode #byMetier,
 .search-mode #byProblematique,
 .search-mode .tab-content {
-    filter: none !important;
+  filter: none !important;
 }
 
 /* Ne pas flouter la search bar */
 .search-mode .search-banner {
-    filter: none !important;
-    z-index: 1000 !important;
+  filter: none !important;
+  z-index: 1000 !important;
 }
 
 /* Overlay de fond — DOIT ÊTRE SOUS LA BARRE */
 .search-overlay {
-    position: fixed;
-    inset: 0;
-    display: none !important;
-    background: transparent;
-    z-index: 1 !important;        /* en dessous de tout */
-    pointer-events: none !important;
+  position: fixed;
+  inset: 0;
+  display: none !important;
+  background: transparent;
+  z-index: 1 !important; /* en dessous de tout */
+  pointer-events: none !important;     /* n’intercepte jamais */
 }
-
 .search-mode .search-overlay {
-    display: block !important;
+  display: block !important;
 }
 
 /* Quand la recherche est active, barre en haut (iOS OK) */
 .search-banner.search-bar-top {
-    position: fixed !important;
-    top: 60px !important;
-    bottom: auto !important;
-    border-bottom: 1px solid var(--border);
-    border-top: none;
-    z-index: 1000 !important;      /* au-dessus de l’overlay */
+  position: fixed !important;
+  top: 60px !important;
+  bottom: auto !important;
+  border-bottom: 1px solid var(--border);
+  border-top: none;
+  z-index: 1000 !important; /* au-dessus de l’overlay */
 }
