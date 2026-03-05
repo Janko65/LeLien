@@ -380,3 +380,12 @@ display: none !important;
 .search-mode .search-overlay {
     display: block;
 }
+
+/* Quand la barre passe en haut */
+.search-banner.search-bar-top {
+  top: 60px;              /* sous le header */
+  bottom: auto;           /* annule le placement en bas */
+  border-bottom: 1px solid var(--border);
+  border-top: none;       /* on inverse la bordure pour l’esthétique */
+  z-index: 999;           /* pour passer devant les éléments floutés */
+}
