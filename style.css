@@ -344,3 +344,23 @@ select option:disabled {
     display: none;
     padding: var(--space-3);
 }
+
+#searchOverlay {
+    position: fixed;
+    inset: 0;
+    background: transparent;
+    display: none;
+    z-index: 98; /* Sous la barre mais au-dessus du contenu */
+}
+
+.search-active #searchOverlay {
+    display: block;
+}
+
+.search-active #mainScreen {
+    display: none !important;
+}
+
+.search-active #searchResults {
+    display: block !important;
+}
