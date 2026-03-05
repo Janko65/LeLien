@@ -18,11 +18,14 @@
   --space-3: 16px;
   --space-4: 20px;
 
-  --métier1-color: #4285F4;
-  --métier2-color: #4CAF50;
-  --métier3-color: #F44336;
+  --educateur-color: #4285F4;
+  --veilleur-color: #4CAF50;
+  --medecin-color: #F44336;
   --admin-color: #9C27B0;
-  
+
+  --planning-color: #FF9800;
+  --jeunes-color: #00BCD4;
+  --repas-color: #E91E63;
 }
 
 [data-theme="light"] {
