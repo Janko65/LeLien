@@ -224,6 +224,52 @@ function searchProblematiques() {
     );
   }
 
+// --------------------------
+// MODE RECHERCHE
+// --------------------------
+const searchInput = document.getElementById("searchInput");
+const searchResults = document.getElementById("searchResults");
+
+searchInput.addEventListener("focus", activateSearchMode);
+searchInput.addEventListener("input", updateSearchState);
+
+function activateSearchMode() {
+    document.body.classList.add("search-active");
+    updateSearchState();
+}
+
+function updateSearchState() {
+    const q = searchInput.value.trim();
+
+    if (q === "") {
+        searchResults.style.display = "none";
+    } else {
+        searchResults.style.display = "block";
+        renderSearchResults(q);
+    }
+}
+
+function renderSearchResults(query) {
+    const results = getUserProblematiques().filter(p =>
+        p.titre.toLowerCase().includes(query.toLowerCase()) ||
+        p.description.toLowerCase().includes(query.toLowerCase())
+    );
+
+    if (results.length === 0) {
+        searchResults.innerHTML = "<p>Aucun résultat</p>";
+        return;
+    }
+
+    searchResults.innerHTML = results
+        .map(p => `
+            <div class="search-item" onclick="openProblematique('${p.id}')">
+                <strong>${p.titre}</strong><br>
+                <small>${formatDate(p.dateDeb)} – ${categories[p.categorie].label}</small>
+            </div>
+        `)
+        .join("");
+}
+  
   if (currentTab === "byMetier") renderByMetier(filtered);
   else if (currentTab === "byProblematique") renderByProblematique(filtered);
 }
@@ -628,4 +674,21 @@ function showTab(tabId) {
 
 function showMoreModal() {
   showModal("moreModal");
+}
+// Détection du clavier mobile
+let initialHeight = window.innerHeight;
+
+window.addEventListener("resize", () => {
+    const keyboardClosed = window.innerHeight >= initialHeight - 100;
+    const empty = searchInput.value.trim() === "";
+
+    if (keyboardClosed && empty) {
+        exitSearchMode();
+    }
+});
+
+function exitSearchMode() {
+    document.body.classList.remove("search-active");
+    searchResults.style.display = "none";
+    searchInput.value = "";
 }
