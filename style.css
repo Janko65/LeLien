@@ -350,74 +350,36 @@ select option:disabled { color: var(--muted); }
 
 /* ===================== MODE RECHERCHE ===================== */
 
-/* ===================== MODE RECHERCHE ===================== */
-/* On floute uniquement l'UI, JAMAIS le contenu */
-.search-mode .tabs,
+/* Flouter uniquement l'UI (header, tabs, bottom bar) */
 .search-mode .app-header,
+.search-mode .tabs,
 .search-mode .bottom-bar {
-  filter: blur(6px);
+    filter: blur(6px) !important;
 }
 
-/* Le contenu RESTE NET pour afficher les résultats */
-.search-mode .screen {
-  filter: none !important;
-}
-
-/* Ne pas flouter la search-bar */
-.search-mode .search-banner {
-  filter: none !important;
-}
-
-/* Overlay */
-.search-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.4);
-  z-index: 998;
-  display: none;
-}
-.search-mode .search-overlay {
-  display: block;
+/* Ne PAS flouter le contenu : toutes les zones où s'affichent les résultats */
+.search-mode .screen,
+.search-mode #mainScreen,
+.search-mode #byMetier,
+.search-mode #byProblematique,
+.search-mode .tab-content {
+    filter: none !important;
 }
 
 /* Ne pas flouter la search bar */
 .search-mode .search-banner {
-  filter: none !important;
+    filter: none !important;
+    z-index: 999 !important;
 }
 
-/* Overlay click pour fermer */
+/* Overlay de fond */
 .search-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.4);
-  z-index: 998;
-  display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.35);
+    z-index: 998;
+    display: none;
 }
 .search-mode .search-overlay {
-  display: block;
-}
-
-/* ===== VERSION FUSIONNÉE DE .search-bar-top ===== */
-.search-bar-top {
-  position: fixed !important;
-  top: 10px;
-  bottom: auto !important;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 90% !important;
-  z-index: 999;
-
-  height: 48px !important;
-  padding: 0 !important;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-/* Input compact en mode top */
-.search-bar-top input {
-  height: 40px !important;
-  width: 100% !important;
-  max-width: 400px;
+    display: block;
 }
