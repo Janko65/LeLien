@@ -349,7 +349,7 @@ select option:disabled { color: var(--muted); }
 }
 
 /* ===================== MODE RECHERCHE ===================== */
-.search-mode body,
+
 .search-mode .screen,
 .search-mode .tabs,
 .search-mode .app-header,
