@@ -371,3 +371,13 @@ select option:disabled {
   width: 100% !important;
   max-width: 400px;
 }
+
+/* Compacte vraiment la search-bar quand elle passe en top */
+.search-bar-top {
+    padding: 0 !important;         /* supprime le gros padding d'origine */
+    height: 48px !important;       /* taille visuelle normale */
+}
+
+.search-bar-top input {
+    height: 40px !important;       /* cohérent avec la hauteur du conteneur */
+}
