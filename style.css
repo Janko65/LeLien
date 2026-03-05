@@ -357,7 +357,7 @@ select option:disabled { color: var(--muted); }
     filter: blur(6px) !important;
 }
 
-/* Ne PAS flouter le contenu : toutes les zones où s'affichent les résultats */
+/* Ne PAS flouter le contenu */
 .search-mode .screen,
 .search-mode #mainScreen,
 .search-mode #byMetier,
@@ -369,24 +369,29 @@ select option:disabled { color: var(--muted); }
 /* Ne pas flouter la search bar */
 .search-mode .search-banner {
     filter: none !important;
-    z-index: 999 !important;
+    z-index: 1000 !important;
 }
 
-/* Overlay de fond */
+/* Overlay de fond — DOIT ÊTRE SOUS LA BARRE */
 .search-overlay {
-display: none !important;
+    position: fixed;
+    inset: 0;
+    display: none !important;
+    background: transparent;
+    z-index: 1 !important;        /* en dessous de tout */
+    pointer-events: none !important;
 }
 
 .search-mode .search-overlay {
-    display: block;
+    display: block !important;
 }
 
-/* Quand la recherche est active, barre en haut (compatible iOS) */
+/* Quand la recherche est active, barre en haut (iOS OK) */
 .search-banner.search-bar-top {
-  position: fixed !important;
-  top: 60px !important;       /* sous le header */
-  bottom: unset !important;   /* Safari iOS ne comprend pas "auto" */
-  border-bottom: 1px solid var(--border);
-  border-top: none;
-  z-index: 999 !important;
+    position: fixed !important;
+    top: 60px !important;
+    bottom: auto !important;
+    border-bottom: 1px solid var(--border);
+    border-top: none;
+    z-index: 1000 !important;      /* au-dessus de l’overlay */
 }
