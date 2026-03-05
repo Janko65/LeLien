@@ -374,12 +374,9 @@ select option:disabled { color: var(--muted); }
 
 /* Overlay de fond */
 .search-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.35);
-    z-index: 998;
-    display: none;
+display: none !important;
 }
+
 .search-mode .search-overlay {
     display: block;
 }
