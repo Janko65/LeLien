@@ -320,4 +320,27 @@ select option:disabled {
   background: var(--panel-alt);
   color: var(--text);
 }
+/* Mode recherche actif */
+.search-active #mainScreen {
+    display: none !important;
+}
 
+.search-active #searchBanner {
+    position: fixed;
+    top: 60px; /* sous le header */
+    bottom: auto;
+    border-top: none;
+    border-bottom: 1px solid var(--border);
+}
+
+#searchResults {
+    position: fixed;
+    top: 110px; /* header 60px + search bar 50px */
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow-y: auto;
+    background: var(--bg);
+    display: none;
+    padding: var(--space-3);
+}
